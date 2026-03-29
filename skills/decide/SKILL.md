@@ -42,7 +42,7 @@ Triggered when `.claude-operator/` directory does not exist.
 ### Step 1: Repo Analysis
 
 Dispatch a subagent using the Agent tool:
-- Read `skills/decide/prompts/onboarding-repo-analysis.md` for the prompt
+- Read `${CLAUDE_SKILL_DIR}/prompts/onboarding-repo-analysis.md` for the prompt
 - Dispatch as a `general-purpose` subagent
 - Collect the JSON output (product hypothesis)
 
@@ -91,7 +91,7 @@ Create the `.claude-operator/` directory structure:
 mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs
 ```
 
-Read `skills/decide/prompts/state-templates.md` for the JSON schemas.
+Read `${CLAUDE_SKILL_DIR}/prompts/state-templates.md` for the JSON schemas.
 
 Write these files using information gathered from repo analysis + interview:
 - `.claude-operator/memory.json` — fill in product info, features, constraints, known_gaps
@@ -119,7 +119,7 @@ Read `.claude-operator/memory.json` and `.claude-operator/backlog.json`.
 ### Step 2: Dispatch Research Agents
 
 Dispatch ALL 7 research agents IN PARALLEL using the Agent tool. For each agent:
-- Read the corresponding prompt file from `skills/decide/prompts/research-*.md`
+- Read the corresponding prompt file from `${CLAUDE_SKILL_DIR}/prompts/research-*.md`
 - Replace `{{memory_json}}` with the contents of `memory.json`
 - Replace `{{backlog_json}}` with the contents of `backlog.json`
 - Dispatch as a `general-purpose` subagent
@@ -165,7 +165,7 @@ Continue to the Propose Phase (same session).
 
 ### Step 1: Generate PRD
 
-Read `skills/decide/prompts/prd-template.md` for the template.
+Read `${CLAUDE_SKILL_DIR}/prompts/prd-template.md` for the template.
 
 Determine the next PRD number by counting existing files in `.claude-operator/prds/`.
 
@@ -178,7 +178,7 @@ Save to `.claude-operator/prds/NNN-feature-name.md`.
 
 ### Step 2: Self-Critique
 
-Read `skills/decide/prompts/prd-critic.md` for instructions.
+Read `${CLAUDE_SKILL_DIR}/prompts/prd-critic.md` for instructions.
 
 Run the PRD through all 5 critique lenses. Modify the PRD file in place. Track changes.
 
@@ -258,7 +258,7 @@ Read `state.json` — phase must be "execute". Read `current_prd` to get the PRD
 
 ### Step 1: Dispatch Execution Subagent
 
-Read `skills/decide/prompts/execution.md` for the prompt template.
+Read `${CLAUDE_SKILL_DIR}/prompts/execution.md` for the prompt template.
 
 Replace template variables:
 - `{{prd_contents}}` — full contents of the PRD file
