@@ -112,19 +112,28 @@ Update `state.json` phase to "research" and exit. The launcher will restart for 
 
 Read `state.json` — phase must be "research".
 
+### Step 0: Check for Fast-Track
+
+Read `.claude-operator/backlog.json`. If any queued item has `priority_score >= 0.85`, skip the full research phase:
+- Output: "Fast-tracking — backlog has high-priority items (score >= 0.85). Skipping research."
+- Pick the highest-priority queued item as this cycle's candidate.
+- Jump directly to **Step 5: Transition** (set phase to "propose").
+
+This avoids burning 7+ research agent dispatches when there is already a clear next action.
+
 ### Step 1: Load Context
 
 Read `.claude-operator/memory.json` and `.claude-operator/backlog.json`.
 
 ### Step 2: Dispatch Research Agents
 
-Dispatch ALL 7 research agents IN PARALLEL using the Agent tool. For each agent:
+Dispatch ALL research agents IN PARALLEL using the Agent tool. For each agent:
 - Read the corresponding prompt file from `${CLAUDE_SKILL_DIR}/prompts/research-*.md`
 - Replace `{{memory_json}}` with the contents of `memory.json`
 - Replace `{{backlog_json}}` with the contents of `backlog.json`
 - Dispatch as a `general-purpose` subagent
 
-The 7 agents:
+The 7 standard agents:
 1. `research-code-auditor.md`
 2. `research-product-gap.md`
 3. `research-security.md`
@@ -132,6 +141,23 @@ The 7 agents:
 5. `research-customer-value.md`
 6. `research-experimentation.md`
 7. `research-analytics.md`
+
+**8th agent — User Inputs:**
+Check if `${CLAUDE_SKILL_DIR}/inputs/` exists and contains any files. If so:
+- Read `${CLAUDE_SKILL_DIR}/prompts/research-user-inputs.md` for the prompt
+- Replace `{{memory_json}}` and `{{backlog_json}}` as with other agents
+- Replace `{{input_files}}` with the concatenated contents of ALL files in `${CLAUDE_SKILL_DIR}/inputs/`, each prefixed with its filename
+- Dispatch in parallel with the other 7 agents
+
+The `inputs/` folder is where the user drops customer feedback, market research, competitor analysis, user interviews, or any other external context relevant to product discovery. Files can be any format (markdown, text, JSON, etc.). The agent reads them all and extracts actionable product insights.
+
+**Custom research agents:**
+Check if `${CLAUDE_SKILL_DIR}/agents/` contains any `.md` files (ignore README.md and .gitkeep). For each custom agent file found:
+- Read the file as a prompt template
+- Replace `{{memory_json}}` and `{{backlog_json}}` as with other agents
+- Dispatch in parallel with all other agents
+
+Custom agents let users add domain-specific research (e.g., accessibility auditor, performance analyzer, API design reviewer) without modifying the built-in agent set. See `agents/README.md` for the template.
 
 ### Step 3: Synthesize Results
 
