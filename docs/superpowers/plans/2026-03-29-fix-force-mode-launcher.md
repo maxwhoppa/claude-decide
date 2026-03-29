@@ -1,3 +1,25 @@
+# Fix Force Mode Launcher Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Rewrite the force mode launcher to eliminate a shell injection vulnerability, ensure the operator runs with full SKILL.md guardrails, add paused state handling, and add a --max-cycles safety limit.
+
+**Architecture:** Single bash script rewrite. The secure prompt is written to a temp file via single-quoted heredoc (no shell expansion possible), then passed to `claude -p` via `cat`. The prompt instructs the operator to read SKILL.md from disk rather than inlining it, so the operator gets the same phase router code path as interactive `/decide force`.
+
+**Tech Stack:** Bash, claude CLI
+
+---
+
+### Task 1: Rewrite launcher.sh
+
+**Files:**
+- Modify: `skills/decide/scripts/launcher.sh` (full rewrite, lines 1-75)
+
+- [ ] **Step 1: Write the new launcher script**
+
+Replace the entire contents of `skills/decide/scripts/launcher.sh` with:
+
+```bash
 #!/bin/bash
 # Claude Decide Launcher (Force Mode Only)
 # Runs the autonomous operator loop with no user interaction.
@@ -143,3 +165,41 @@ while true; do
   echo "Cycle ${CYCLE_COUNT} complete. Starting next cycle..."
   echo ""
 done
+```
+
+- [ ] **Step 2: Syntax check the script**
+
+Run: `bash -n skills/decide/scripts/launcher.sh`
+Expected: No output (clean syntax)
+
+- [ ] **Step 3: Run shellcheck**
+
+Run: `shellcheck skills/decide/scripts/launcher.sh`
+Expected: No errors. Warnings about `python3 -c` are acceptable.
+
+- [ ] **Step 4: Verify --force is required**
+
+Run: `bash skills/decide/scripts/launcher.sh 2>&1`
+Expected: Output contains "This launcher is for --force mode" and exits 0.
+
+- [ ] **Step 5: Verify --max-cycles parsing**
+
+Run: `bash skills/decide/scripts/launcher.sh --force --max-cycles abc 2>&1`
+Expected: Output contains "Error: --max-cycles requires a positive integer argument." and exits 1.
+
+- [ ] **Step 6: Verify no unquoted variable interpolation in prompt**
+
+Run: `grep -n '\${' skills/decide/scripts/launcher.sh`
+Expected: All `${VAR}` occurrences are either (a) inside the argument parsing section, (b) in echo statements, or (c) in the `claude -p "$(cat "$PROMPT_FILE")"` line. NONE are inside the heredoc between `<<'PROMPT_EOF'` and `PROMPT_EOF`.
+
+- [ ] **Step 7: Verify heredoc uses single-quoted delimiter**
+
+Run: `grep "PROMPT_EOF" skills/decide/scripts/launcher.sh`
+Expected: The opening delimiter is `<<'PROMPT_EOF'` (single-quoted), not `<<PROMPT_EOF`.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add skills/decide/scripts/launcher.sh
+git commit -m "feat: fix force mode launcher security and instruction loading (PRD-002)"
+```

@@ -313,7 +313,19 @@ Write a summary to `.claude-operator/logs/cycle-NNN.json` with:
 - validation notes
 - memory updates made
 
-### Step 4: Reset and Exit
+### Step 4: Commit All Changes
+
+Stage ALL changes — both code changes from execution AND `.claude-operator/` state files (memory, backlog, logs, PRDs). Commit with this exact format:
+
+```
+Cycle N -- [short description] (PRD-NNN)
+```
+
+Where N is the cycle number. Example: `Cycle 3 -- add progress indicators (PRD-003)`.
+
+If the execution subagent already committed code changes, amend that commit to also include `.claude-operator/` and use the correct message format. Every cycle MUST produce exactly one commit with this format.
+
+### Step 5: Reset and Exit
 
 Update `state.json`:
 - Increment `cycle`

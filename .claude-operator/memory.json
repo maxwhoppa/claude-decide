@@ -1,0 +1,62 @@
+{
+  "product": {
+    "name": "Claude Operator (claude-decide)",
+    "description": "A Claude Code skill/plugin that acts as an autonomous product manager and developer — continuously researches a target codebase, generates PRDs, collaborates with the user, and executes improvements via an on-disk state machine cycle.",
+    "stage": "pre-launch",
+    "customer": "Engineers and vibe coders",
+    "problem": "Developers leave significant value unrealized due to idle time — Claude Operator eliminates this by continuously iterating on code without relying on the user for direction.",
+    "revenue_model": "Free and open source"
+  },
+  "features": [
+    "Onboarding with automated repo analysis and user interview",
+    "7 parallel research agents (code auditor, product gap, security, market, customer value, experimentation, analytics)",
+    "PRD generation with fixed template",
+    "5-lens PRD self-critique",
+    "Interactive collaboration phase for PRD approval",
+    "Autonomous execution via superpowers brainstorm-plan-execute pipeline",
+    "Stuck detection and recovery after 10+ failed attempts",
+    "On-disk state machine with persistent memory, backlog, and cycle logs",
+    "Force mode for fully autonomous operation",
+    "Meta-research fallback after 3 stagnant cycles",
+    "Graceful stop via stop file or Ctrl+C",
+    "Bash launcher script for force mode",
+    "/decide slash command for invoking operator from Claude Code",
+    "Secure force mode launcher with shell injection fix, temp file prompt construction, paused state handling, and max-cycles safety limit"
+  ],
+  "feature_history": [
+    { "feature": "Onboarding with automated repo analysis and user interview", "source": "onboarding", "cycle": 0 },
+    { "feature": "7 parallel research agents", "source": "onboarding", "cycle": 0 },
+    { "feature": "PRD generation with fixed template", "source": "onboarding", "cycle": 0 },
+    { "feature": "5-lens PRD self-critique", "source": "onboarding", "cycle": 0 },
+    { "feature": "Interactive collaboration phase", "source": "onboarding", "cycle": 0 },
+    { "feature": "Autonomous execution via superpowers pipeline", "source": "onboarding", "cycle": 0 },
+    { "feature": "Stuck detection and recovery", "source": "onboarding", "cycle": 0 },
+    { "feature": "On-disk state machine", "source": "onboarding", "cycle": 0 },
+    { "feature": "Force mode", "source": "onboarding", "cycle": 0 },
+    { "feature": "Meta-research fallback", "source": "onboarding", "cycle": 0 },
+    { "feature": "Graceful stop", "source": "onboarding", "cycle": 0 },
+    { "feature": "Bash launcher script for force mode", "source": "onboarding", "cycle": 0 },
+    { "feature": "/decide slash command for invoking operator from Claude Code", "source": "operator-built", "cycle": 1 },
+    { "feature": "Secure force mode launcher with shell injection fix, paused state handling, and max-cycles limit", "source": "operator-built", "cycle": 2 }
+  ],
+  "constraints": [],
+  "assumptions": [
+    "Users have Claude Code installed with superpowers plugin",
+    "Target projects have a git repository initialized"
+  ],
+  "known_gaps": [
+    "No README.md",
+    "No tests",
+    "No CI/CD",
+    "No .gitignore",
+    "No cost awareness for subagent dispatches",
+    "No state file migration strategy",
+    "Never been tested against a real target codebase",
+    "Launcher script still used for force mode continuous loop (acceptable, now secured)"
+  ],
+  "past_decisions": [
+    { "cycle": 1, "decision": "Renamed skill to 'decide' for /decide slash command. Skill now invocable natively in Claude Code.", "prd": "001-slash-command-skill.md" },
+    { "cycle": 2, "decision": "Rewrote force mode launcher to fix critical shell injection and ensure full SKILL.md instruction loading. Added paused state handling and max-cycles safety limit.", "prd": "002-fix-force-mode-launcher.md" }
+  ],
+  "experiments": []
+}

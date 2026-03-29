@@ -1,0 +1,328 @@
+{
+  "items": [
+    {
+      "id": "BL-001",
+      "idea": "Make the operator a proper Claude Code slash command skill that can be invoked via / command — the entire experience should live within Claude Code, not require a bash launcher for default mode",
+      "source": "onboarding-wishlist",
+      "cycle_added": 0,
+      "priority_score": 0.95,
+      "status": "completed",
+      "notes": "Completed in cycle 1. Skill renamed to 'decide', invocable via /decide. PRD-001."
+    },
+    {
+      "id": "BL-002",
+      "idea": "Add a README.md with installation instructions, usage guide, and examples",
+      "source": "onboarding-detected",
+      "cycle_added": 0,
+      "priority_score": 0.75,
+      "status": "queued",
+      "notes": "Needed for launch — users need to know how to install and use it"
+    },
+    {
+      "id": "BL-003",
+      "idea": "Add .gitignore file",
+      "source": "onboarding-detected",
+      "cycle_added": 0,
+      "priority_score": 0.55,
+      "status": "queued",
+      "notes": "Security auditor flagged: memory.json and cycle logs with sensitive data will be committed on git add . Bumped priority."
+    },
+    {
+      "id": "BL-004",
+      "idea": "Add cost awareness / token budget tracking for subagent dispatches",
+      "source": "onboarding-detected",
+      "cycle_added": 0,
+      "priority_score": 0.40,
+      "status": "queued",
+      "notes": "7 parallel research agents per cycle could be expensive. Analytics agent confirmed: no cycle timing exists."
+    },
+    {
+      "id": "BL-005",
+      "idea": "Add state file versioning/migration strategy for schema changes between versions",
+      "source": "onboarding-detected",
+      "cycle_added": 0,
+      "priority_score": 0.35,
+      "status": "queued",
+      "notes": null
+    },
+    {
+      "id": "BL-006",
+      "idea": "End-to-end test against a real target codebase to validate the full cycle works",
+      "source": "onboarding-detected",
+      "cycle_added": 0,
+      "priority_score": 0.70,
+      "status": "queued",
+      "notes": "Critical for launch confidence but depends on BL-001 being done first"
+    },
+    {
+      "id": "BL-007",
+      "idea": "Fix force mode launcher to load full SKILL.md instructions instead of a one-line prompt — currently bypasses all guardrails and constraints",
+      "source": "research-code-auditor",
+      "cycle_added": 1,
+      "priority_score": 0.85,
+      "status": "completed",
+      "notes": "Completed in cycle 2 with PRD-002. Launcher rewritten with temp file prompt construction, heredoc-based SKILL.md loading, paused state handling, and max-cycles limit."
+    },
+    {
+      "id": "BL-008",
+      "idea": "Add backlog inspection, status, and history commands — users can't see what the operator knows or has done without reading JSON files",
+      "source": "research-product-gap",
+      "cycle_added": 1,
+      "priority_score": 0.65,
+      "status": "queued",
+      "notes": "Convergence: product gap + customer value. Key for trust and retention."
+    },
+    {
+      "id": "BL-009",
+      "idea": "Add session re-entry for collaborate phase — if user closes Claude Code mid-conversation, next invocation should restore context and resume",
+      "source": "research-product-gap",
+      "cycle_added": 1,
+      "priority_score": 0.60,
+      "status": "queued",
+      "notes": "Convergence: product gap + customer value."
+    },
+    {
+      "id": "BL-010",
+      "idea": "Validate state.json before phase routing — check phase enum, mode enum, current_prd path containment. Prevents phase injection and path traversal.",
+      "source": "research-security",
+      "cycle_added": 1,
+      "priority_score": 0.70,
+      "status": "queued",
+      "notes": "Convergence: security + code auditor. Small effort, high impact. Cycle 2 code auditor: also add fallback handling for unrecognized phase values."
+    },
+    {
+      "id": "BL-011",
+      "idea": "Add cycle timing, per-agent research stats, and structured feedback outcomes to cycle logs",
+      "source": "research-analytics",
+      "cycle_added": 1,
+      "priority_score": 0.50,
+      "status": "queued",
+      "notes": "Analytics agent: currently impossible to know phase durations, agent contribution, or PRD acceptance rates."
+    },
+    {
+      "id": "BL-012",
+      "idea": "Remove 'validate' from phase enum in state-templates.md (it's folded into execute) and handle 'paused' state in launcher",
+      "source": "research-code-auditor",
+      "cycle_added": 1,
+      "priority_score": 0.55,
+      "status": "queued",
+      "notes": "Code auditor: validate phase is undefined, paused state causes infinite re-invocation loop in launcher."
+    },
+    {
+      "id": "BL-013",
+      "idea": "Store priority scoring rationale alongside each backlog item and surface it during collaboration",
+      "source": "research-customer-value",
+      "cycle_added": 1,
+      "priority_score": 0.50,
+      "status": "queued",
+      "notes": "Convergence: customer value + experimentation. Reduces black-box feeling."
+    },
+    {
+      "id": "BL-014",
+      "idea": "Add persistent stuck event history (stuck_history.json) — currently stuck events are ephemeral and deleted on resolution",
+      "source": "research-analytics",
+      "cycle_added": 1,
+      "priority_score": 0.40,
+      "status": "queued",
+      "notes": "Analytics: biggest reliability blind spot."
+    },
+    {
+      "id": "BL-015",
+      "idea": "Add memory update command and operator inbox for async context injection post-onboarding",
+      "source": "research-product-gap",
+      "cycle_added": 1,
+      "priority_score": 0.50,
+      "status": "queued",
+      "notes": "Product gap + customer value: memory is write-once, operator context drifts from reality."
+    },
+    {
+      "id": "BL-016",
+      "idea": "Wrap template variables in XML tags for prompt injection safety and add restricted_paths to memory.json",
+      "source": "research-security",
+      "cycle_added": 1,
+      "priority_score": 0.45,
+      "status": "queued",
+      "notes": "Security: medium severity injection risk via backlog content in subagent prompts."
+    },
+    {
+      "id": "BL-017",
+      "idea": "Transition backlog items to 'proposed' status during propose phase and extract meta-research prompt to separate file",
+      "source": "research-code-auditor",
+      "cycle_added": 1,
+      "priority_score": 0.40,
+      "status": "queued",
+      "notes": "Code auditor: prevents duplicate PRD on restart, follows prompt externalization pattern."
+    },
+    {
+      "id": "BL-018",
+      "idea": "Add onboarding save-and-resume and execution checkpoint for interrupted sessions",
+      "source": "research-customer-value",
+      "cycle_added": 1,
+      "priority_score": 0.45,
+      "status": "queued",
+      "notes": "Customer value: interrupted onboarding restarts from scratch, interrupted execution redoes work."
+    },
+    {
+      "id": "BL-019",
+      "idea": "Add git branch isolation — each execution cycle runs on a dated branch, optionally opens draft PR",
+      "source": "research-market",
+      "cycle_added": 1,
+      "priority_score": 0.55,
+      "status": "queued",
+      "notes": "Market research: rollback/undo is table stakes for 2026 autonomous coding tools."
+    },
+    {
+      "id": "BL-020",
+      "idea": "Add onboarding confirmation step — show summary of what was captured before starting first research cycle",
+      "source": "research-product-gap",
+      "cycle_added": 1,
+      "priority_score": 0.45,
+      "status": "queued",
+      "notes": "Product gap: users have no chance to correct mistakes before first cycle starts."
+    },
+    {
+      "id": "BL-021",
+      "idea": "Fix critical shell injection in launcher.sh — SKILL_CONTENTS variable interpolated unquoted into claude -p command allows arbitrary command execution",
+      "source": "research-security",
+      "cycle_added": 2,
+      "priority_score": 0.90,
+      "status": "completed",
+      "notes": "Completed in cycle 2 with PRD-002 (combined with BL-007). Shell injection eliminated via heredoc with single-quoted delimiter."
+    },
+    {
+      "id": "BL-022",
+      "idea": "Quick onboarding mode — infer answers from repo analysis, reduce mandatory questions from 11 to 3-4 confirmations",
+      "source": "research-customer-value",
+      "cycle_added": 2,
+      "priority_score": 0.80,
+      "status": "queued",
+      "notes": "Convergence: customer value + experimentation. 11+ sequential questions is the biggest activation barrier. Target: repo analysis → editable defaults → 3-4 confirmations."
+    },
+    {
+      "id": "BL-023",
+      "idea": "Add progress indicators during long-running phases — show which phase is active, agent dispatch status, and phase completion",
+      "source": "research-product-gap",
+      "cycle_added": 2,
+      "priority_score": 0.78,
+      "status": "queued",
+      "notes": "Convergence: product gap + customer value. No output during 7-agent research or execution phases makes tool feel broken."
+    },
+    {
+      "id": "BL-024",
+      "idea": "Publish to Claude Code skills marketplace for discoverability",
+      "source": "research-market",
+      "cycle_added": 2,
+      "priority_score": 0.78,
+      "status": "queued",
+      "notes": "Market research: skills marketplace is primary discovery channel in 2026 with 1000+ skills. Without presence, tool is invisible to target audience."
+    },
+    {
+      "id": "BL-025",
+      "idea": "Add installation mechanism — install.sh script or npx command for going from GitHub to running /decide in under 60 seconds",
+      "source": "research-customer-value",
+      "cycle_added": 2,
+      "priority_score": 0.75,
+      "status": "queued",
+      "notes": "Convergence: customer value + product gap. Currently requires manual symlink/copy. No documented install path. Distinct from BL-002 (README) — this is the actual mechanism."
+    },
+    {
+      "id": "BL-026",
+      "idea": "Pre-flight check for superpowers plugin dependency during onboarding — verify brainstorming, writing-plans, and executing-plans skills exist before proceeding",
+      "source": "research-code-auditor",
+      "cycle_added": 2,
+      "priority_score": 0.75,
+      "status": "queued",
+      "notes": "Code auditor: execution phase depends on superpowers skills that may not be installed. Silent failure if missing."
+    },
+    {
+      "id": "BL-027",
+      "idea": "Adaptive research agent selection — dispatch 3-5 agents per cycle based on codebase type and product stage instead of all 7",
+      "source": "research-code-auditor",
+      "cycle_added": 2,
+      "priority_score": 0.72,
+      "status": "queued",
+      "notes": "Convergence: code auditor + experimentation. Security/CRUD/mobile checks irrelevant for CLI tools. 40-60% cost reduction potential without quality loss."
+    },
+    {
+      "id": "BL-028",
+      "idea": "Add /decide reset command for clean re-onboarding — confirm with user, remove .claude-operator/, optionally preserve backlog",
+      "source": "research-product-gap",
+      "cycle_added": 2,
+      "priority_score": 0.70,
+      "status": "queued",
+      "notes": "Product gap: no way to uninstall, reset, or start fresh. Missing CRUD — has create (onboarding) but no delete."
+    },
+    {
+      "id": "BL-029",
+      "idea": "Confidence-gated auto-approval — auto-approve PRDs above user-defined trust threshold, creating a middle ground between force and default mode",
+      "source": "research-experimentation",
+      "cycle_added": 2,
+      "priority_score": 0.72,
+      "status": "queued",
+      "notes": "Convergence: customer value + experimentation. Binary force/default loses users who want oversight but not on every cycle."
+    },
+    {
+      "id": "BL-030",
+      "idea": "Post-execution satisfaction signal — ask user to rate cycle output, use ratings to calibrate priority scoring in future cycles",
+      "source": "research-customer-value",
+      "cycle_added": 2,
+      "priority_score": 0.72,
+      "status": "queued",
+      "notes": "Convergence: customer value + experimentation. No feedback loop — operator cannot learn whether output was valuable."
+    },
+    {
+      "id": "BL-031",
+      "idea": "Add /decide rollback command — read last cycle log commit hash, offer git revert, mark backlog item as rejected",
+      "source": "research-product-gap",
+      "cycle_added": 2,
+      "priority_score": 0.68,
+      "status": "queued",
+      "notes": "Convergence: product gap + customer value. Distinct from BL-019 (branch isolation prevents problem, rollback fixes after the fact)."
+    },
+    {
+      "id": "BL-032",
+      "idea": "Inject user collaboration feedback into execution subagent prompt — nuanced approval conditions are currently lost in handoff",
+      "source": "research-customer-value",
+      "cycle_added": 2,
+      "priority_score": 0.65,
+      "status": "queued",
+      "notes": "Customer value: 'yes but keep API backward compatible' feedback not passed to execution agent. Only PRD contents and memory are injected."
+    },
+    {
+      "id": "BL-033",
+      "idea": "Add objective success metrics per execution cycle — test coverage delta, lint errors, bundle size — for verifiable improvement (Karpathy Loop pattern)",
+      "source": "research-market",
+      "cycle_added": 2,
+      "priority_score": 0.60,
+      "status": "queued",
+      "notes": "Market research: Karpathy autoresearch loop succeeds because each iteration has measurable criteria. Currently only 'did it compile' verification."
+    },
+    {
+      "id": "BL-034",
+      "idea": "Add /decide stats command — aggregate cycle metrics: total cycles, success rate, top research agents, PRD acceptance rate, backlog velocity",
+      "source": "research-analytics",
+      "cycle_added": 2,
+      "priority_score": 0.60,
+      "status": "queued",
+      "notes": "Analytics: distinct from BL-008 (backlog inspection). This computes aggregate metrics across all cycle logs. 20+ cycles = 20+ JSON files to read manually."
+    },
+    {
+      "id": "BL-035",
+      "idea": "Sanitize backlog content before re-injection into research prompts — break circular prompt injection chain where one compromised cycle poisons all future cycles",
+      "source": "research-security",
+      "cycle_added": 2,
+      "priority_score": 0.65,
+      "status": "queued",
+      "notes": "Security high severity. Distinct from BL-016 (XML tag wrapping) — this is about the circular re-injection amplification pattern across cycles."
+    },
+    {
+      "id": "BL-036",
+      "idea": "Sanitize PRD filenames — strip path separators and enforce strict naming pattern to prevent path traversal during PRD write and read",
+      "source": "research-security",
+      "cycle_added": 2,
+      "priority_score": 0.65,
+      "status": "queued",
+      "notes": "Security high severity. Feature name from research agent output used unsanitized as filename. Small effort fix."
+    }
+  ]
+}
