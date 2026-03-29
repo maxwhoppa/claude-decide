@@ -1,6 +1,6 @@
 ---
-name: claude-operator
-description: Use when the user runs 'claude decide' or asks the operator to analyze, research, plan, or autonomously improve a codebase. Continuously operates as an autonomous product builder that researches, generates PRDs, and executes improvements.
+name: decide
+description: Use when the user wants to decide what to build next, run the autonomous operator, improve a codebase, or asks 'what should we build'. Researches, generates PRDs, and executes improvements autonomously.
 ---
 
 # Claude Operator
@@ -9,16 +9,13 @@ Autonomous continuous product builder. Each invocation executes one phase of the
 
 ## Usage
 
-**Default mode (interactive):** Open Claude Code in your project and say:
-- "run the operator"
-- "decide what to build next"
-- "claude decide"
+**Default mode (interactive):** Run `/decide` in Claude Code.
 
 You'll interact during onboarding and PRD approval. Re-invoke between cycles.
 
-**Force mode (fully autonomous):** Run from terminal:
+**Force mode (fully autonomous):** Run `/decide force` in Claude Code, or from terminal:
 ```bash
-bash skills/claude-operator/scripts/launcher.sh --force
+bash skills/decide/scripts/launcher.sh --force
 ```
 
 ## Quick Reference
@@ -31,6 +28,7 @@ ONBOARDING (first run) → RESEARCH → PROPOSE → COLLABORATE → EXECUTE → 
 
 On every invocation:
 
+0. Check if args contain "force" → if `.claude-operator/state.json` exists, set its `mode` to "force" for this cycle. If state doesn't exist yet, remember to set mode to "force" during onboarding initialization.
 1. Check if `.claude-operator/` exists. If not → **Onboarding Phase**.
 2. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
 3. Read `.claude-operator/state.json`. Execute the phase specified in `state.json.phase`.
@@ -44,7 +42,7 @@ Triggered when `.claude-operator/` directory does not exist.
 ### Step 1: Repo Analysis
 
 Dispatch a subagent using the Agent tool:
-- Read `skills/claude-operator/prompts/onboarding-repo-analysis.md` for the prompt
+- Read `skills/decide/prompts/onboarding-repo-analysis.md` for the prompt
 - Dispatch as a `general-purpose` subagent
 - Collect the JSON output (product hypothesis)
 
@@ -93,7 +91,7 @@ Create the `.claude-operator/` directory structure:
 mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs
 ```
 
-Read `skills/claude-operator/prompts/state-templates.md` for the JSON schemas.
+Read `skills/decide/prompts/state-templates.md` for the JSON schemas.
 
 Write these files using information gathered from repo analysis + interview:
 - `.claude-operator/memory.json` — fill in product info, features, constraints, known_gaps
@@ -121,7 +119,7 @@ Read `.claude-operator/memory.json` and `.claude-operator/backlog.json`.
 ### Step 2: Dispatch Research Agents
 
 Dispatch ALL 7 research agents IN PARALLEL using the Agent tool. For each agent:
-- Read the corresponding prompt file from `skills/claude-operator/prompts/research-*.md`
+- Read the corresponding prompt file from `skills/decide/prompts/research-*.md`
 - Replace `{{memory_json}}` with the contents of `memory.json`
 - Replace `{{backlog_json}}` with the contents of `backlog.json`
 - Dispatch as a `general-purpose` subagent
@@ -167,7 +165,7 @@ Continue to the Propose Phase (same session).
 
 ### Step 1: Generate PRD
 
-Read `skills/claude-operator/prompts/prd-template.md` for the template.
+Read `skills/decide/prompts/prd-template.md` for the template.
 
 Determine the next PRD number by counting existing files in `.claude-operator/prds/`.
 
@@ -180,7 +178,7 @@ Save to `.claude-operator/prds/NNN-feature-name.md`.
 
 ### Step 2: Self-Critique
 
-Read `skills/claude-operator/prompts/prd-critic.md` for instructions.
+Read `skills/decide/prompts/prd-critic.md` for instructions.
 
 Run the PRD through all 5 critique lenses. Modify the PRD file in place. Track changes.
 
@@ -260,7 +258,7 @@ Read `state.json` — phase must be "execute". Read `current_prd` to get the PRD
 
 ### Step 1: Dispatch Execution Subagent
 
-Read `skills/claude-operator/prompts/execution.md` for the prompt template.
+Read `skills/decide/prompts/execution.md` for the prompt template.
 
 Replace template variables:
 - `{{prd_contents}}` — full contents of the PRD file
@@ -322,6 +320,8 @@ Update `state.json`:
 - Set `phase` to "research"
 - Clear `current_prd`
 - Set `last_completed` to current ISO timestamp
+
+Output to the user: "Cycle N complete. Run /decide to start the next cycle." (where N is the cycle number that just finished).
 
 Exit. The launcher starts the next cycle.
 
