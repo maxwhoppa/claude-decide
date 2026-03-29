@@ -88,7 +88,7 @@ Adaptive follow-ups (ask based on answers):
 Create the `.claude-operator/` directory structure:
 
 ```bash
-mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs
+mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs .claude-operator/inputs .claude-operator/agents
 ```
 
 Read `${CLAUDE_SKILL_DIR}/prompts/state-templates.md` for the JSON schemas.
@@ -143,21 +143,21 @@ The 7 standard agents:
 7. `research-analytics.md`
 
 **8th agent — User Inputs:**
-Check if `${CLAUDE_SKILL_DIR}/inputs/` exists and contains any files. If so:
+Check if `.claude-operator/inputs/` exists and contains any files (ignore .gitkeep). If so:
 - Read `${CLAUDE_SKILL_DIR}/prompts/research-user-inputs.md` for the prompt
 - Replace `{{memory_json}}` and `{{backlog_json}}` as with other agents
-- Replace `{{input_files}}` with the concatenated contents of ALL files in `${CLAUDE_SKILL_DIR}/inputs/`, each prefixed with its filename
+- Replace `{{input_files}}` with the concatenated contents of ALL files in `.claude-operator/inputs/`, each prefixed with its filename
 - Dispatch in parallel with the other 7 agents
 
-The `inputs/` folder is where the user drops customer feedback, market research, competitor analysis, user interviews, or any other external context relevant to product discovery. Files can be any format (markdown, text, JSON, etc.). The agent reads them all and extracts actionable product insights.
+The `.claude-operator/inputs/` folder is where the user drops customer feedback, market research, competitor analysis, user interviews, or any other external context relevant to product discovery. Files can be any format (markdown, text, JSON, etc.). The agent reads them all and extracts actionable product insights.
 
 **Custom research agents:**
-Check if `${CLAUDE_SKILL_DIR}/agents/` contains any `.md` files (ignore README.md and .gitkeep). For each custom agent file found:
+Check if `.claude-operator/agents/` contains any `.md` files (ignore README.md and .gitkeep). For each custom agent file found:
 - Read the file as a prompt template
 - Replace `{{memory_json}}` and `{{backlog_json}}` as with other agents
 - Dispatch in parallel with all other agents
 
-Custom agents let users add domain-specific research (e.g., accessibility auditor, performance analyzer, API design reviewer) without modifying the built-in agent set. See `agents/README.md` for the template.
+Custom agents let users add domain-specific research (e.g., accessibility auditor, performance analyzer, API design reviewer) without modifying the built-in agent set.
 
 ### Step 3: Synthesize Results
 
