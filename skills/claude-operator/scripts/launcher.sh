@@ -1,19 +1,31 @@
 #!/bin/bash
-# Claude Operator Launcher
-# Manages the self-restart loop between operator cycles.
-# Usage: bash launcher.sh [--force]
+# Claude Operator Launcher (Force Mode Only)
+# Runs the autonomous operator loop with no user interaction.
+# For default mode (interactive), run from Claude Code directly.
+#
+# Usage: bash launcher.sh --force
+#
+# Default mode: Open Claude Code in your project and say "run the operator"
 
 set -euo pipefail
 
-MODE="default"
-if [[ "${1:-}" == "--force" ]]; then
-  MODE="force"
+if [[ "${1:-}" != "--force" ]]; then
+  echo "Claude Operator Launcher"
+  echo ""
+  echo "This launcher is for --force mode (fully autonomous, no user interaction)."
+  echo ""
+  echo "For default mode (interactive), open Claude Code in your project and say:"
+  echo "  > run the operator"
+  echo ""
+  echo "For force mode:"
+  echo "  bash launcher.sh --force"
+  exit 0
 fi
 
 # Trap signals so Ctrl+C kills the whole loop, not just the inner process
 trap "echo ''; echo 'Operator stopped.'; exit 0" SIGINT SIGTERM
 
-echo "Claude Operator starting in ${MODE} mode..."
+echo "Claude Operator starting in FORCE mode (fully autonomous)..."
 echo "Press Ctrl+C to stop immediately."
 echo "Run 'touch .claude-operator/stop' from another terminal to stop after the current cycle."
 echo ""
@@ -31,7 +43,7 @@ while true; do
     echo ""
     echo "============================================"
     echo "  OPERATOR IS STUCK"
-    echo "  Run 'claude decide' to review and unblock."
+    echo "  Open Claude Code to review and unblock."
     echo "============================================"
     echo ""
     # Wait until stuck.json is removed
@@ -48,12 +60,8 @@ while true; do
     continue
   fi
 
-  # Run one operator cycle
-  if [[ "$MODE" == "force" ]]; then
-    claude -p "You are Claude Operator. Read .claude-operator/state.json and execute the current phase. Mode: force (auto-approve PRDs, skip user collaboration). When the phase is complete, update state.json and exit."
-  else
-    claude -p "You are Claude Operator. Read .claude-operator/state.json and execute the current phase. Mode: default (pause for user collaboration at PRD stage). When the phase is complete, update state.json and exit."
-  fi
+  # Run one operator cycle (non-interactive)
+  claude -p "You are Claude Operator. Read .claude-operator/state.json and execute the current phase. Mode: force (auto-approve PRDs, skip user collaboration). When the phase is complete, update state.json and exit."
 
   echo ""
   echo "Cycle complete. Starting next cycle..."

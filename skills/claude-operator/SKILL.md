@@ -7,6 +7,20 @@ description: Use when the user runs 'claude decide' or asks the operator to anal
 
 Autonomous continuous product builder. Each invocation executes one phase of the operator cycle, updates state, and exits.
 
+## Usage
+
+**Default mode (interactive):** Open Claude Code in your project and say:
+- "run the operator"
+- "decide what to build next"
+- "claude decide"
+
+You'll interact during onboarding and PRD approval. Re-invoke between cycles.
+
+**Force mode (fully autonomous):** Run from terminal:
+```bash
+bash skills/claude-operator/scripts/launcher.sh --force
+```
+
 ## Quick Reference
 
 ```
