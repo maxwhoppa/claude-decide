@@ -29,7 +29,7 @@
     "skills/decide/SKILL.md"
   ],
   "tests_added": 0,
-  "commit": "pending",
+  "commit": "e0fedca",
   "validation_notes": "No existing test suite. Verified by reading SKILL.md Rollback Phase section.",
   "memory_updates": [
     "Added '/decide rollback command' to features and feature_history",

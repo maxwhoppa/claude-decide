@@ -62,6 +62,34 @@ Repeat the following until a stop condition is met:
 
 3. **Loop back to step 1.**
 
+### CRITICAL: Never Stop Mid-Cycle
+
+The Execute Phase invokes three superpowers skills in sequence via the Skill tool:
+1. `superpowers:brainstorming`
+2. `superpowers:writing-plans`
+3. `superpowers:executing-plans`
+
+Each skill invocation loads a prompt, you follow it, and then **control returns to you**. When control returns, you MUST immediately continue to the next step — your very next action must be the next skill invocation or phase step. Do NOT:
+- Stop and wait for user input after a skill returns
+- Treat a skill's completion as a natural stopping point
+- Say "proceeding to X" without actually doing X in the same response
+- Ask the user which execution approach they want (always use inline execution in the loop)
+- Summarize what just happened and then stop — summarize AND continue in the same response
+
+**This is the #1 failure mode of the decide-loop.** In practice, the model tends to pause after `writing-plans` returns (before invoking `executing-plans`) and after `executing-plans` returns (before starting Update Memory). You MUST power through these transitions without stopping. If you find yourself about to end a response after a skill completes, you are doing it wrong — invoke the next skill immediately.
+
+The same applies between phases. After Execute completes, immediately run Update Memory. After Update Memory completes, immediately loop back and start the next cycle's Research Phase. The ONLY valid stopping points are:
+- A stop condition from Step 4.1 (max cycles, stop file, stuck, paused)
+- The user interrupts
+
+If a skill's instructions say "wait for user approval", "ask the user", or "offer execution choice" — skip those steps. You are in force mode. Resolve autonomously and continue.
+
+### Operational Rules
+
+- **Commit format**: All operator cycle commits must use `Cycle N -- [short description] (PRD-NNN)`. One commit per cycle, including .claude-operator/ state files.
+- **No manual file copies**: After committing changes to `skills/` in the repo, use `bash install.sh` to sync to `~/.claude/skills/`. Never use raw `cp` commands.
+- **install.sh for syncing**: The repo's `install.sh` handles copying skills to the user's Claude skills directory. Always use it instead of manual copies.
+
 ### Important Differences from `/decide`
 
 - **No exit between phases**: The normal `/decide` skill exits after certain phase transitions and expects re-invocation. This loop runs all phases of a cycle sequentially without stopping.
