@@ -1,8 +1,8 @@
 {
   "status": "running",
   "phase": "execute",
-  "cycle": 12,
+  "cycle": 13,
   "mode": "force",
-  "current_prd": "012-reset-command.md",
-  "last_completed": "2026-03-30T00:30:00Z"
+  "current_prd": "013-rollback-command.md",
+  "last_completed": "2026-03-30T00:45:00Z"
 }

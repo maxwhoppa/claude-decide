@@ -28,7 +28,7 @@
     "skills/decide/SKILL.md"
   ],
   "tests_added": 0,
-  "commit": "pending",
+  "commit": "fa78b6a",
   "validation_notes": "No existing test suite. Verified by reading SKILL.md Reset Phase section.",
   "memory_updates": [
     "Added '/decide reset command' to features and feature_history",

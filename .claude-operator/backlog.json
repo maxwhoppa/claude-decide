@@ -276,8 +276,8 @@
       "source": "research-product-gap",
       "cycle_added": 2,
       "priority_score": 0.68,
-      "status": "queued",
-      "notes": "Convergence: product gap + customer value. Distinct from BL-019 (branch isolation prevents problem, rollback fixes after the fact)."
+      "status": "completed",
+      "notes": "Completed in cycle 13 with PRD-013. Rollback Phase added to SKILL.md with confirmation, git revert, and backlog rejection."
     },
     {
       "id": "BL-032",

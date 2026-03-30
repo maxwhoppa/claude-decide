@@ -28,6 +28,8 @@ Auto mode auto-approves PRDs whose backlog priority score meets the threshold, a
 
 **Reset:** Run `/decide reset` to delete `.claude-operator/` and start fresh. Offers to preserve backlog. In force mode, resets without confirmation.
 
+**Rollback:** Run `/decide rollback` to revert the most recent cycle's commit. Confirms before reverting (force mode skips confirmation).
+
 ## Quick Reference
 
 ```
@@ -41,6 +43,7 @@ On every invocation:
 0. Check if args contain "force" → if `.claude-operator/state.json` exists, set its `mode` to "force" for this cycle. If state doesn't exist yet, remember to set mode to "force" during onboarding initialization.
    Check if args contain "auto" → set `mode` to "auto" in `state.json`. If the next argument is a number between 0.0 and 1.0, set `auto_threshold` to that value. Otherwise set `auto_threshold` to 0.75. If state doesn't exist yet, remember to set mode to "auto" during onboarding initialization.
    Check if args contain "reset" → jump directly to **Reset Phase**. Skip all other routing.
+   Check if args contain "rollback" → jump directly to **Rollback Phase**. Skip all other routing.
 1. Check if `.claude-operator/` exists. If not → **Onboarding Phase**.
 2. Ensure all expected subdirectories exist: `mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs .claude-operator/inputs .claude-operator/agents` — this self-heals if directories were added in a newer version of the skill.
 3. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
@@ -221,6 +224,41 @@ If mode is "default" or "auto" (or no mode specified):
 Output: "Operator reset complete. Run /decide to start fresh onboarding."
 
 Exit.
+
+---
+
+## Rollback Phase
+
+Triggered when args contain "rollback".
+
+### Step 1: Find the most recent cycle
+
+Read the files in `.claude-operator/logs/` and find the highest-numbered cycle log (e.g., `cycle-012.json`). If no cycle logs exist, output: "Nothing to roll back — no completed cycles found." and exit.
+
+### Step 2: Extract commit info
+
+Read the most recent cycle log. Extract the `commit` hash and `prd` filename. Read the PRD title from the PRD file.
+
+### Step 3: Confirm (interactive modes only)
+
+If mode is "force":
+- Skip confirmation. Proceed directly to Step 4.
+
+If mode is "default" or "auto" (or no mode specified):
+- Output: "Rolling back cycle [N]: [PRD title] (commit [hash]). This will git revert the commit. Proceed? (yes/no)"
+- Wait for user input. Only proceed on explicit "yes". On anything else, output "Rollback cancelled." and exit.
+
+### Step 4: Revert
+
+- Run `git revert --no-edit [commit_hash]`.
+- If the revert succeeds, proceed to Step 5.
+- If the revert fails (e.g., merge conflicts), output the error message and suggest: "The revert has conflicts. Resolve them manually with `git mergetool` or `git revert --abort` to cancel." Exit.
+
+### Step 5: Update state
+
+- Find the backlog item corresponding to the rolled-back PRD. Mark it as "rejected" with note: "Rolled back by user after cycle [N]".
+- Output: "Cycle [N] rolled back successfully. The backlog item has been marked as rejected."
+- Exit.
 
 ---
 

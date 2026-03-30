@@ -31,7 +31,8 @@
     "Confidence-gated auto-approval mode — auto mode with configurable threshold auto-approves high-priority PRDs while routing lower-scored ones to collaboration",
     "Post-execution satisfaction signal — 1-5 rating prompt after Update Memory phase for default/auto modes, stored in cycle logs and satisfaction_history",
     "State validation before phase routing — validates phase enum, mode enum, and current_prd path safety in Phase Router Step 3b",
-    "/decide reset command — clean re-onboarding with optional backlog preservation"
+    "/decide reset command — clean re-onboarding with optional backlog preservation",
+    "/decide rollback command — reverts most recent cycle commit with confirmation and backlog rejection"
   ],
   "feature_history": [
     { "feature": "Onboarding with automated repo analysis and user interview", "source": "onboarding", "cycle": 0 },
@@ -57,7 +58,8 @@
     { "feature": "Confidence-gated auto-approval mode", "source": "operator-built", "cycle": 9 },
     { "feature": "Post-execution satisfaction signal", "source": "operator-built", "cycle": 10 },
     { "feature": "State validation before phase routing", "source": "operator-built", "cycle": 11 },
-    { "feature": "/decide reset command", "source": "operator-built", "cycle": 12 }
+    { "feature": "/decide reset command", "source": "operator-built", "cycle": 12 },
+    { "feature": "/decide rollback command", "source": "operator-built", "cycle": 13 }
   ],
   "constraints": [],
   "assumptions": [
@@ -85,7 +87,8 @@
     { "cycle": 9, "decision": "Added auto mode with configurable threshold for confidence-gated PRD approval. Third mode alongside default and force.", "prd": "009-confidence-gated-auto-approval.md" },
     { "cycle": 10, "decision": "Added satisfaction rating prompt (1-5) to Update Memory phase for default/auto modes. Stored in cycle logs and satisfaction_history in memory.json. Force mode auto-skips.", "prd": "010-satisfaction-signal.md" },
     { "cycle": 11, "decision": "Added state.json validation in Phase Router Step 3b. Checks phase enum, mode enum, and current_prd path safety. Self-heals with warnings.", "prd": "011-state-validation.md" },
-    { "cycle": 12, "decision": "Added /decide reset command with confirmation, optional backlog preservation, and force mode clean slate.", "prd": "012-reset-command.md" }
+    { "cycle": 12, "decision": "Added /decide reset command with confirmation, optional backlog preservation, and force mode clean slate.", "prd": "012-reset-command.md" },
+    { "cycle": 13, "decision": "Added /decide rollback command that reverts most recent cycle's commit, confirms with user, marks backlog item as rejected.", "prd": "013-rollback-command.md" }
   ],
   "experiments": []
 }
