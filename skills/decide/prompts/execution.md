@@ -16,29 +16,19 @@ You are implementing a PRD for Claude Operator. You have full autonomy to build,
 
 ## Process
 
-Follow this exact process:
+Follow this exact process. You MUST use the superpowers skills — invoke them via the Skill tool.
 
-### 1. Analyze
+### 1. Brainstorm
 
-Read the PRD thoroughly. Identify:
-- Which files need to be created or modified
-- What the acceptance criteria are
-- What risks or edge cases to watch for
-- What existing code patterns to follow
+Invoke the `/superpowers:brainstorming` skill (via the Skill tool) to explore the design space before writing any code. Feed it the PRD contents as context. This ensures you consider alternatives and edge cases before committing to an approach.
 
 ### 2. Plan
 
-Write a step-by-step implementation plan. For each step:
-- What file(s) to change
-- What the change does
-- How to verify it works
-- Dependencies on other steps
+Invoke the `/superpowers:writing-plans` skill (via the Skill tool) to produce a structured implementation plan. Feed it the PRD and the brainstorming output. The skill will guide you through writing a step-by-step plan with files to change, verification steps, and dependencies.
 
-Save the plan to `docs/superpowers/plans/{{prd_filename}}.plan.md` (create the directory if needed).
+### 3. Execute
 
-### 3. Implement
-
-Execute the plan step by step:
+Invoke the `/superpowers:executing-plans` skill (via the Skill tool) to implement the plan. This skill handles incremental execution with review checkpoints. Follow its process exactly:
 - Make changes incrementally — one logical unit at a time
 - After each change, verify it doesn't break existing functionality
 - Follow existing code patterns and conventions in the codebase

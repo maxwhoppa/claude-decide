@@ -195,8 +195,8 @@
       "source": "research-customer-value",
       "cycle_added": 2,
       "priority_score": 0.80,
-      "status": "queued",
-      "notes": "Convergence: customer value + experimentation. 11+ sequential questions is the biggest activation barrier. Target: repo analysis → editable defaults → 3-4 confirmations."
+      "status": "completed",
+      "notes": "Completed in cycle 3 with PRD-003. Onboarding now uses confidence-scored summary table with fallback to full interview."
     },
     {
       "id": "BL-023",
