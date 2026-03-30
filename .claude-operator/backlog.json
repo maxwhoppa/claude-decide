@@ -87,8 +87,8 @@
       "source": "research-security",
       "cycle_added": 1,
       "priority_score": 0.70,
-      "status": "queued",
-      "notes": "Convergence: security + code auditor. Small effort, high impact. Cycle 2 code auditor: also add fallback handling for unrecognized phase values."
+      "status": "completed",
+      "notes": "Completed in cycle 11 with PRD-011. Phase Router Step 3b validates phase, mode, and current_prd with self-healing fallbacks."
     },
     {
       "id": "BL-011",

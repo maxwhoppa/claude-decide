@@ -41,7 +41,11 @@ On every invocation:
 1. Check if `.claude-operator/` exists. If not → **Onboarding Phase**.
 2. Ensure all expected subdirectories exist: `mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs .claude-operator/inputs .claude-operator/agents` — this self-heals if directories were added in a newer version of the skill.
 3. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
-4. Read `.claude-operator/state.json`. Execute the phase specified in `state.json.phase`.
+3b. **Validate state.json** — Read `.claude-operator/state.json` and check:
+   - `phase` must be one of: "research", "propose", "collaborate", "execute", "update_memory". If not, output `"Warning: unrecognized phase '[value]'. Resetting to research."`, set phase to "research", and continue.
+   - `mode` must be one of: "default", "force", "auto". If not, output `"Warning: unrecognized mode '[value]'. Defaulting to 'default'."`, set mode to "default", and continue.
+   - If `current_prd` is set (not null), it must match the pattern `NNN-*.md` (digits, dash, alphanumeric/dash characters, .md extension) and must NOT contain path separators (`/` or `\`). If invalid, output `"Warning: invalid current_prd '[value]'. Clearing and resetting to research."`, clear current_prd, set phase to "research", and continue.
+4. Execute the phase specified in `state.json.phase`.
 
 ---
 

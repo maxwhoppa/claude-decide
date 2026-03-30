@@ -29,7 +29,7 @@
     "skills/decide/prompts/state-templates.md"
   ],
   "tests_added": 0,
-  "commit": "pending",
+  "commit": "421f6ad",
   "validation_notes": "No existing test suite. All 6 PRD requirements verified by reading modified files.",
   "memory_updates": [
     "Added 'Post-execution satisfaction signal' to features and feature_history",
