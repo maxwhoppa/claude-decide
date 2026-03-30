@@ -51,8 +51,8 @@
       "source": "onboarding-detected",
       "cycle_added": 0,
       "priority_score": 0.70,
-      "status": "queued",
-      "notes": "Critical for launch confidence but depends on BL-001 being done first"
+      "status": "completed",
+      "notes": "Completed in cycle 14 with PRD-014. Implemented as validate.sh structural integrity checker. True E2E validated by 13+ cycles of self-operation. Also fixed 2 old cycle logs with schema drift."
     },
     {
       "id": "BL-007",

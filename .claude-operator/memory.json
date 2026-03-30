@@ -32,7 +32,8 @@
     "Post-execution satisfaction signal — 1-5 rating prompt after Update Memory phase for default/auto modes, stored in cycle logs and satisfaction_history",
     "State validation before phase routing — validates phase enum, mode enum, and current_prd path safety in Phase Router Step 3b",
     "/decide reset command — clean re-onboarding with optional backlog preservation",
-    "/decide rollback command — reverts most recent cycle commit with confirmation and backlog rejection"
+    "/decide rollback command — reverts most recent cycle commit with confirmation and backlog rejection",
+    "Operator validation script (validate.sh) — checks state.json, backlog.json, memory.json, cycle logs, and cross-references"
   ],
   "feature_history": [
     { "feature": "Onboarding with automated repo analysis and user interview", "source": "onboarding", "cycle": 0 },
@@ -59,7 +60,8 @@
     { "feature": "Post-execution satisfaction signal", "source": "operator-built", "cycle": 10 },
     { "feature": "State validation before phase routing", "source": "operator-built", "cycle": 11 },
     { "feature": "/decide reset command", "source": "operator-built", "cycle": 12 },
-    { "feature": "/decide rollback command", "source": "operator-built", "cycle": 13 }
+    { "feature": "/decide rollback command", "source": "operator-built", "cycle": 13 },
+    { "feature": "Operator validation script", "source": "operator-built", "cycle": 14 }
   ],
   "constraints": [],
   "assumptions": [
@@ -88,7 +90,8 @@
     { "cycle": 10, "decision": "Added satisfaction rating prompt (1-5) to Update Memory phase for default/auto modes. Stored in cycle logs and satisfaction_history in memory.json. Force mode auto-skips.", "prd": "010-satisfaction-signal.md" },
     { "cycle": 11, "decision": "Added state.json validation in Phase Router Step 3b. Checks phase enum, mode enum, and current_prd path safety. Self-heals with warnings.", "prd": "011-state-validation.md" },
     { "cycle": 12, "decision": "Added /decide reset command with confirmation, optional backlog preservation, and force mode clean slate.", "prd": "012-reset-command.md" },
-    { "cycle": 13, "decision": "Added /decide rollback command that reverts most recent cycle's commit, confirms with user, marks backlog item as rejected.", "prd": "013-rollback-command.md" }
+    { "cycle": 13, "decision": "Added /decide rollback command that reverts most recent cycle's commit, confirms with user, marks backlog item as rejected.", "prd": "013-rollback-command.md" },
+    { "cycle": 14, "decision": "Added validate.sh script that checks structural integrity of all .claude-operator/ state files. Also fixed schema drift in 2 old cycle logs.", "prd": "014-validation-script.md", "lessons": "Validation script immediately found real issues — early cycle logs used prd_filename instead of prd. Validates the value of structural validation." }
   ],
   "experiments": []
 }

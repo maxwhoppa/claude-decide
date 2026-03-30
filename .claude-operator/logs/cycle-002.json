@@ -11,8 +11,25 @@
     "analytics": "12 findings: no research agent contribution tracking, no PRD critique tracking, no collaboration outcome taxonomy, no onboarding completion tracking, execution observability binary, no stagnation metrics, no backlog velocity, no error categorization, no user engagement signal, no force/default mode comparison, no aggregate dashboard, no prompt version tracking"
   },
   "new_backlog_items": 16,
-  "new_backlog_ids": ["BL-021", "BL-022", "BL-023", "BL-024", "BL-025", "BL-026", "BL-027", "BL-028", "BL-029", "BL-030", "BL-031", "BL-032", "BL-033", "BL-034", "BL-035", "BL-036"],
-  "proposed_idea": "BL-007 + BL-021: Fix force mode launcher — secure shell handling and full instruction loading",
+  "new_backlog_ids": [
+    "BL-021",
+    "BL-022",
+    "BL-023",
+    "BL-024",
+    "BL-025",
+    "BL-026",
+    "BL-027",
+    "BL-028",
+    "BL-029",
+    "BL-030",
+    "BL-031",
+    "BL-032",
+    "BL-033",
+    "BL-034",
+    "BL-035",
+    "BL-036"
+  ],
+  "proposed_idea": "BL-007 + BL-021: Fix force mode launcher \u2014 secure shell handling and full instruction loading",
   "user_feedback": "approved",
   "prd_filename": "002-fix-force-mode-launcher.md",
   "execution_result": "success",
@@ -29,5 +46,6 @@
     "Added feature_history entry for cycle 2",
     "Added past_decisions entry for PRD-002",
     "Marked BL-007 and BL-021 as completed"
-  ]
+  ],
+  "prd": "002-fix-force-mode-launcher.md"
 }
