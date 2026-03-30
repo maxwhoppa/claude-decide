@@ -5,7 +5,7 @@ description: Continuously run the decide operator in force mode, auto-restarting
 
 # Decide Loop
 
-Runs the Claude Operator (`/decide force`) in a continuous loop within a single Claude Code session. After each cycle completes, it automatically starts the next one.
+Runs the Claude Operator (`/decide force`) in a continuous loop. Each cycle executes in a **fresh Claude session** via `claude -p`, ensuring full superpowers skill access (brainstorming, writing-plans, executing-plans) on every cycle.
 
 ## Usage
 
@@ -18,7 +18,7 @@ Runs the Claude Operator (`/decide force`) in a continuous loop within a single 
 
 ## How It Works
 
-This skill wraps the `/decide` skill's phase router. Instead of exiting after each phase and waiting for re-invocation, it loops: execute phase → update state → check stop conditions → execute next phase.
+This skill manages the loop — checking stop conditions, handling stuck recovery, and optionally reviewing the backlog. The actual cycle execution is delegated to a fresh `claude -p "/decide force"` session each time, so every cycle gets clean context and full skill access.
 
 ## Execution
 
@@ -26,13 +26,9 @@ This skill wraps the `/decide` skill's phase router. Instead of exiting after ea
 
 Read the args. If a number is provided, use it as `max_cycles`. Otherwise default to 50. If "edit" is present, set `edit_mode` to true.
 
-### Step 2: Load the Decide Skill
+### Step 2: Initialize
 
-Read the full decide skill from `/Users/maxwellnewman/.claude/skills/decide/SKILL.md`. This is your playbook — all phase logic, guardrails, and constraints apply exactly as documented there.
-
-### Step 3: Initialize
-
-If `.claude-operator/` does not exist, run the **Onboarding Phase** from the decide skill (including the user interview — this is the one interactive part). Set mode to "force" during initialization.
+If `.claude-operator/` does not exist, run the **Onboarding Phase** from the decide skill (read `/Users/maxwellnewman/.claude/skills/decide/SKILL.md` for the onboarding instructions — this is the one interactive part). Set mode to "force" during initialization.
 
 If `.claude-operator/state.json` exists, set its `mode` to "force".
 
@@ -44,13 +40,13 @@ Starting decide loop (force mode, max cycles: [N]).
 Touch .claude-operator/stop to halt after the current cycle.
 ```
 
-### Step 3b: Backlog Review (edit mode only)
+### Step 2b: Backlog Review (edit mode only)
 
 If `edit_mode` is false, skip this step entirely.
 
 Read `.claude-operator/backlog.json`. Filter to items with `status: "queued"`, sorted by `priority_score` descending.
 
-If no queued items exist, output: "No queued backlog items to review. The loop will run research to discover new work." and skip to Step 4.
+If no queued items exist, output: "No queued backlog items to review. The loop will run research to discover new work." and skip to Step 3.
 
 Present the full queued backlog as a numbered table:
 
@@ -88,47 +84,37 @@ After the user has reviewed all items (or used a bulk command), write the update
 
 Output: "Backlog review complete. [N] items approved, [M] rejected, [P] reprioritized. Starting loop..."
 
-### Step 4: Loop
+### Step 3: Loop
 
 Repeat the following until a stop condition is met:
 
 1. **Check stop conditions** (in order):
    - If cycle counter >= max_cycles → output "Max cycles ([N]) reached. Loop stopped." and exit.
    - If `.claude-operator/stop` exists → remove the file, output "Stop signal detected. Loop stopped." and exit.
-   - If `.claude-operator/stuck.json` exists → enter **Stuck Recovery Phase** from the decide skill (present the stuck report to the user and handle their response). After resolution, continue the loop. If the user chooses "stop", exit the loop.
+   - If `.claude-operator/stuck.json` exists → enter **Stuck Recovery Phase** (read the stuck report from the file and present it to the user conversationally, then handle their response: debug together, skip, or stop). After resolution, continue the loop. If the user chooses "stop", exit the loop.
    - If `state.json` status is "paused" → output "Operator is paused." and exit.
 
-2. **Execute one cycle:**
+2. **Execute one cycle via fresh session:**
    - Increment cycle counter.
    - Output: `--- Cycle [N] of [max] ---`
-   - Read `state.json` to determine the current phase.
-   - Execute that phase using the exact logic from the decide skill's phase router, with one modification: **do not exit after phase transitions**. Instead of "Exit. The next cycle picks up execution," continue directly to the next phase in the same iteration.
-   - A full cycle is: research → propose → execute → update memory. Run all of these phases sequentially within a single loop iteration (don't stop between them).
-   - After the Update Memory phase completes (state is reset to "research" and cycle is incremented), that counts as one completed cycle.
+   - Run the following command using the Bash tool:
+     ```bash
+     claude -p "You are Claude Operator running in force mode. Read skills/decide/SKILL.md for your full instructions. Read .claude-operator/state.json for current state. Execute the phase router: run ALL phases of one complete cycle (research → propose → execute → update memory) without stopping between phases. Set mode to force. Follow ALL guardrails. When the cycle is complete (state reset to research, cycle incremented), exit."
+     ```
+   - This launches a **fresh Claude session** with full skill access. It will invoke superpowers:brainstorming, superpowers:writing-plans, and superpowers:executing-plans as specified in SKILL.md's Execute Phase.
+   - Wait for the command to complete.
+   - Output: `Cycle [N] complete.`
 
 3. **Loop back to step 1.**
 
-### CRITICAL: Never Stop Mid-Cycle
+### Why Fresh Sessions
 
-The Execute Phase invokes three superpowers skills in sequence via the Skill tool:
-1. `superpowers:brainstorming`
-2. `superpowers:writing-plans`
-3. `superpowers:executing-plans`
+Each cycle runs in a fresh `claude -p` session because:
+- **Full skill access**: Subagents (Agent tool) don't have access to the Skill tool. Only top-level sessions can invoke superpowers skills. A fresh session ensures brainstorming, writing-plans, and executing-plans are all available.
+- **Clean context**: Each cycle gets a full context window instead of competing with accumulated context from previous cycles.
+- **Quality preservation**: In-session loops degrade after cycle 1 — the model starts shortcutting (skipping superpowers, editing files directly). Fresh sessions don't have this problem.
 
-Each skill invocation loads a prompt, you follow it, and then **control returns to you**. When control returns, you MUST immediately continue to the next step — your very next action must be the next skill invocation or phase step. Do NOT:
-- Stop and wait for user input after a skill returns
-- Treat a skill's completion as a natural stopping point
-- Say "proceeding to X" without actually doing X in the same response
-- Ask the user which execution approach they want (always use inline execution in the loop)
-- Summarize what just happened and then stop — summarize AND continue in the same response
-
-**This is the #1 failure mode of the decide-loop.** In practice, the model tends to pause after `writing-plans` returns (before invoking `executing-plans`) and after `executing-plans` returns (before starting Update Memory). You MUST power through these transitions without stopping. If you find yourself about to end a response after a skill completes, you are doing it wrong — invoke the next skill immediately.
-
-The same applies between phases. After Execute completes, immediately run Update Memory. After Update Memory completes, immediately loop back and start the next cycle's Research Phase. The ONLY valid stopping points are:
-- A stop condition from Step 4.1 (max cycles, stop file, stuck, paused)
-- The user interrupts
-
-If a skill's instructions say "wait for user approval", "ask the user", or "offer execution choice" — skip those steps. You are in force mode. Resolve autonomously and continue.
+The tradeoff is that each cycle takes longer to start (session initialization), but the quality of each cycle is significantly higher.
 
 ### Operational Rules
 
@@ -138,7 +124,8 @@ If a skill's instructions say "wait for user approval", "ask the user", or "offe
 
 ### Important Differences from `/decide`
 
-- **No exit between phases**: The normal `/decide` skill exits after certain phase transitions and expects re-invocation. This loop runs all phases of a cycle sequentially without stopping.
-- **Force mode always**: PRDs are auto-approved, collaboration is skipped, open questions are resolved by subagent (per the decide skill's Step 3 in the Propose Phase).
-- **Stuck = interactive pause, not full stop**: When stuck, the loop pauses to let the user help debug (since they're in-session), then continues. Only an explicit "stop" from the user ends the loop.
-- **All other behavior is identical**: Guardrails, research agents, PRD generation, critic, execution, memory updates — all follow the decide skill exactly.
+- **Fresh session per cycle**: Each cycle gets a clean Claude session via `claude -p`, not inline execution.
+- **Force mode always**: PRDs are auto-approved, collaboration is skipped, open questions are resolved autonomously.
+- **Stuck = interactive pause**: When stuck, the loop (running in the parent session) pauses to let the user help debug, then continues.
+- **Backlog review (edit mode)**: The parent session handles interactive backlog review before starting the loop.
+- **All other behavior is identical**: Guardrails, research agents, PRD generation, critic, execution, memory updates — all follow the decide skill exactly, enforced by each fresh session reading SKILL.md.
