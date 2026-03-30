@@ -377,6 +377,12 @@ Read `state.json` — phase must be "execute". Read `current_prd` to get the PRD
 
 Output: "**Execute Phase** — implementing [PRD title]..."
 
+<HARD-GATE>
+You MUST invoke all three superpowers skills below via the Skill tool, in order.
+Do NOT skip any step, even for "simple" changes. Do NOT implement changes directly.
+Every PRD goes through brainstorm → plan → execute. No exceptions.
+</HARD-GATE>
+
 ### Step 1: Brainstorm
 
 Invoke the `superpowers:brainstorming` skill (via the Skill tool). Feed it the PRD contents and product context from `memory.json` as the task description. This explores the design space, considers alternatives, and identifies edge cases before committing to an approach.
