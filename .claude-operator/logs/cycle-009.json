@@ -34,7 +34,7 @@
     "skills/decide/scripts/launcher.sh"
   ],
   "tests_added": 0,
-  "commit": "pending",
+  "commit": "cb35f7d",
   "validation_notes": "No existing test suite. bash -n launcher.sh passed. All 10 PRD requirements verified by reading modified files.",
   "memory_updates": [
     "Added 'Confidence-gated auto-approval mode' to features and feature_history",

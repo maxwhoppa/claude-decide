@@ -28,7 +28,8 @@
     "Pre-flight check during onboarding warns if superpowers skills are missing",
     "Adaptive research agent selection — dispatches 3-5 agents per cycle based on product stage and tech stack",
     "Marketplace-ready plugin metadata with author, repository, homepage, keywords in plugin.json and self-hosted marketplace.json",
-    "Confidence-gated auto-approval mode — auto mode with configurable threshold auto-approves high-priority PRDs while routing lower-scored ones to collaboration"
+    "Confidence-gated auto-approval mode — auto mode with configurable threshold auto-approves high-priority PRDs while routing lower-scored ones to collaboration",
+    "Post-execution satisfaction signal — 1-5 rating prompt after Update Memory phase for default/auto modes, stored in cycle logs and satisfaction_history"
   ],
   "feature_history": [
     { "feature": "Onboarding with automated repo analysis and user interview", "source": "onboarding", "cycle": 0 },
@@ -51,7 +52,8 @@
     { "feature": "Pre-flight superpowers check during onboarding", "source": "operator-built", "cycle": 6 },
     { "feature": "Adaptive research agent selection", "source": "operator-built", "cycle": 7 },
     { "feature": "Marketplace-ready plugin metadata and self-hosted marketplace manifest", "source": "operator-built", "cycle": 8 },
-    { "feature": "Confidence-gated auto-approval mode", "source": "operator-built", "cycle": 9 }
+    { "feature": "Confidence-gated auto-approval mode", "source": "operator-built", "cycle": 9 },
+    { "feature": "Post-execution satisfaction signal", "source": "operator-built", "cycle": 10 }
   ],
   "constraints": [],
   "assumptions": [
@@ -76,7 +78,8 @@
     { "cycle": 6, "decision": "Added pre-flight check during onboarding that warns if superpowers skills are missing.", "prd": "006-preflight-check.md" },
     { "cycle": 7, "decision": "Research phase now selects 3-5 agents based on product stage and tech stack instead of all 7.", "prd": "007-adaptive-research.md" },
     { "cycle": 8, "decision": "Added marketplace metadata to plugin.json, created marketplace.json manifest, and updated README to lead with /plugin install.", "prd": "008-marketplace-publishing.md" },
-    { "cycle": 9, "decision": "Added auto mode with configurable threshold for confidence-gated PRD approval. Third mode alongside default and force.", "prd": "009-confidence-gated-auto-approval.md" }
+    { "cycle": 9, "decision": "Added auto mode with configurable threshold for confidence-gated PRD approval. Third mode alongside default and force.", "prd": "009-confidence-gated-auto-approval.md" },
+    { "cycle": 10, "decision": "Added satisfaction rating prompt (1-5) to Update Memory phase for default/auto modes. Stored in cycle logs and satisfaction_history in memory.json. Force mode auto-skips.", "prd": "010-satisfaction-signal.md" }
   ],
   "experiments": []
 }

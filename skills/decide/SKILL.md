@@ -496,6 +496,23 @@ Where N is the cycle number. Example: `Cycle 3 -- add progress indicators (PRD-0
 
 If the execution subagent already committed code changes, amend that commit to also include `.claude-operator/` and use the correct message format. Every cycle MUST produce exactly one commit with this format.
 
+### Step 5b: Satisfaction Signal
+
+If mode is "default" or "auto":
+- Output: "Rate this cycle's output (1-5, or skip): "
+- Wait for user input.
+- Accept: integer 1-5, "skip", or empty input (treated as skip).
+- If invalid input, re-prompt once: "Please enter 1-5 or skip: ". If still invalid, treat as skip.
+- If a rating is provided, ask: "Any comment? (Enter to skip): "
+- Store in the cycle log's `satisfaction` field: `{ "rating": N, "comment": "user's comment or null" }`
+- Append to `memory.json`'s `satisfaction_history` array: `{ "cycle": N, "rating": N, "prd": "prd-filename" }`
+- Amend the cycle commit to include the updated cycle log and memory.json.
+
+If mode is "force" (or running in decide-loop):
+- Do NOT prompt the user. Automatically store in the cycle log: `{ "rating": null, "comment": "force mode — skipped" }`
+- Append to `memory.json`'s `satisfaction_history`: `{ "cycle": N, "rating": null, "prd": "prd-filename" }`
+- Amend the cycle commit to include the updated files.
+
 ### Step 6: Reset and Exit
 
 Update `state.json`:

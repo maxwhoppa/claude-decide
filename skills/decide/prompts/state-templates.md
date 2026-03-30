@@ -46,7 +46,8 @@ Written during onboarding from repo analysis + user interview.
   "assumptions": [],
   "known_gaps": [],
   "past_decisions": [],
-  "experiments": []
+  "experiments": [],
+  "satisfaction_history": []
 }
 ```
 
@@ -59,6 +60,7 @@ Fields:
 - `known_gaps`: identified deficiencies in the codebase
 - `past_decisions`: array of `{ "cycle": int, "decision": string, "prd": string }`
 - `experiments`: array of experiment records
+- `satisfaction_history`: array of `{ "cycle": int, "rating": int|null, "prd": string }` — tracks user satisfaction ratings per cycle
 
 ## backlog.json
 
@@ -118,6 +120,10 @@ Written at the end of each cycle.
   "tests_added": 0,
   "commit": "",
   "validation_notes": "",
-  "memory_updates": []
+  "memory_updates": [],
+  "satisfaction": {
+    "rating": null,
+    "comment": null
+  }
 }
 ```
