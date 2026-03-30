@@ -99,10 +99,11 @@ Repeat the following until a stop condition is met:
    - Output: `--- Cycle [N] of [max] ---`
    - Run the following command using the Bash tool:
      ```bash
-     claude -p "You are Claude Operator running in force mode. Read skills/decide/SKILL.md for your full instructions. Read .claude-operator/state.json for current state. Execute the phase router: run ALL phases of one complete cycle (research → propose → execute → update memory) without stopping between phases. Set mode to force. Follow ALL guardrails. CRITICAL: During the Execute Phase, you MUST invoke these three superpowers skills in order via the Skill tool: (1) superpowers:brainstorming, (2) superpowers:writing-plans, (3) superpowers:executing-plans. Do NOT skip any of these — they are a hard requirement in SKILL.md. Do NOT implement changes directly without going through all three skills. When the cycle is complete (state reset to research, cycle incremented), exit." --dangerously-skip-permissions
+     claude -p "Invoke the /decide skill with argument 'force' using the Skill tool now. Run ALL phases of one complete cycle (research → propose → execute → update memory) without stopping between phases. Do not exit between phases — continue until the cycle is complete (state reset to research, cycle incremented). CRITICAL: During the Execute Phase, you MUST invoke these three superpowers skills in order via the Skill tool: (1) superpowers:brainstorming, (2) superpowers:writing-plans, (3) superpowers:executing-plans. Do NOT skip any of these. Do NOT implement changes directly." --dangerously-skip-permissions
      ```
+   - The session invokes `/decide force` as a proper skill (setting `${CLAUDE_SKILL_DIR}` correctly for prompt template paths).
    - The `--dangerously-skip-permissions` flag allows the session to use tools without interactive prompts.
-   - This launches a **fresh Claude session** with full skill access. It will invoke superpowers:brainstorming, superpowers:writing-plans, and superpowers:executing-plans as specified in SKILL.md's Execute Phase.
+   - This launches a **fresh Claude session** with full skill access including superpowers:brainstorming, superpowers:writing-plans, and superpowers:executing-plans.
    - Wait for the command to complete.
    - Output: `Cycle [N] complete.`
 
