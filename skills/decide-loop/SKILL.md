@@ -12,6 +12,8 @@ Runs the Claude Operator (`/decide force`) in a continuous loop within a single 
 ```
 /decide-loop              # run until stopped (default max: 50 cycles)
 /decide-loop 10           # run 10 cycles then stop
+/decide-loop edit         # review backlog before starting loop
+/decide-loop 5 edit       # review backlog, then run 5 cycles
 ```
 
 ## How It Works
@@ -22,7 +24,7 @@ This skill wraps the `/decide` skill's phase router. Instead of exiting after ea
 
 ### Step 1: Parse Args
 
-Read the args. If a number is provided, use it as `max_cycles`. Otherwise default to 50.
+Read the args. If a number is provided, use it as `max_cycles`. Otherwise default to 50. If "edit" is present, set `edit_mode` to true.
 
 ### Step 2: Load the Decide Skill
 
@@ -41,6 +43,50 @@ Output:
 Starting decide loop (force mode, max cycles: [N]).
 Touch .claude-operator/stop to halt after the current cycle.
 ```
+
+### Step 3b: Backlog Review (edit mode only)
+
+If `edit_mode` is false, skip this step entirely.
+
+Read `.claude-operator/backlog.json`. Filter to items with `status: "queued"`, sorted by `priority_score` descending.
+
+If no queued items exist, output: "No queued backlog items to review. The loop will run research to discover new work." and skip to Step 4.
+
+Present the full queued backlog as a numbered table:
+
+```
+Backlog review — [N] queued items (sorted by priority):
+
+| # | ID | Priority | Idea |
+|---|-----|----------|------|
+| 1 | BL-031 | 0.68 | /decide rollback command |
+| 2 | BL-008 | 0.65 | Backlog inspection commands |
+| ... | ... | ... | ... |
+
+For each item, respond with:
+  approve  — keep as-is, will be built in priority order
+  reject   — remove from queue (won't be built)
+  bump N   — change priority to N (0.0-1.0)
+  skip     — leave as-is, move to next
+
+Or use bulk commands:
+  approve all        — approve all remaining items
+  reject [#,#,...]   — reject specific items by number
+  bump [#] [score]   — change priority of specific item
+
+Review items now:
+```
+
+Wait for the user to respond. Process their feedback:
+
+- **approve** / **approve all**: No changes needed, items stay queued.
+- **reject [items]**: Set status to "rejected" with note "Rejected during backlog review before decide-loop". Remove from queue.
+- **bump [item] [score]**: Update the item's `priority_score` to the new value.
+- **skip**: Move to the next item or finish review.
+
+After the user has reviewed all items (or used a bulk command), write the updated `backlog.json`.
+
+Output: "Backlog review complete. [N] items approved, [M] rejected, [P] reprioritized. Starting loop..."
 
 ### Step 4: Loop
 
