@@ -191,26 +191,32 @@ Research only runs when the backlog is empty (all items completed, rejected, or 
 
 Read `.claude-operator/memory.json` and `.claude-operator/backlog.json`.
 
-### Step 2: Dispatch Research Agents
+### Step 2: Select and Dispatch Research Agents
 
-Count the total agents to dispatch: 7 standard + 1 if `.claude-operator/inputs/` has files + number of custom `.md` files in `.claude-operator/agents/`.
+Select which research agents to dispatch based on the product context in `memory.json`. Read the `product.stage`, `features`, and `tech_stack` (from the original repo analysis or memory) to determine relevance.
 
-Output: "Dispatching [N] research agents..."
+**Always dispatch (core agents):**
+1. `research-code-auditor.md` — always relevant
+2. `research-product-gap.md` — always relevant
 
-Dispatch ALL research agents IN PARALLEL using the Agent tool. For each agent:
+**Conditionally dispatch (include if criteria match):**
+3. `research-security.md` — if the project has auth, user data handling, API endpoints, or database access
+4. `research-market.md` — if stage is "pre-launch" or "scaling"
+5. `research-customer-value.md` — if stage is "live with users" or "scaling"
+6. `research-experimentation.md` — if the project has feature flags, A/B testing, analytics, or multiple user-facing variants
+7. `research-analytics.md` — if the project has event tracking, monitoring, or observability infrastructure
+
+**When in doubt, include the agent.** At least 3 agents must always be dispatched (the 2 core agents + at least 1 conditional). If no conditional agents match, include `customer-value` as a default third.
+
+Count the selected agents + user inputs agent (if applicable) + custom agents.
+
+Output: "Dispatching [N] research agents: [list of selected agent names]..."
+
+Dispatch the selected agents IN PARALLEL using the Agent tool. For each agent:
 - Read the corresponding prompt file from `${CLAUDE_SKILL_DIR}/prompts/research-*.md`
 - Replace `{{memory_json}}` with the contents of `memory.json`
 - Replace `{{backlog_json}}` with the contents of `backlog.json`
 - Dispatch as a `general-purpose` subagent
-
-The 7 standard agents:
-1. `research-code-auditor.md`
-2. `research-product-gap.md`
-3. `research-security.md`
-4. `research-market.md`
-5. `research-customer-value.md`
-6. `research-experimentation.md`
-7. `research-analytics.md`
 
 **8th agent — User Inputs:**
 Check if `.claude-operator/inputs/` exists and contains any files (ignore .gitkeep). If so:
@@ -231,7 +237,7 @@ Custom agents let users add domain-specific research (e.g., accessibility audito
 
 ### Step 3: Synthesize Results
 
-After all 7 agents return:
+After all selected agents return:
 
 1. **Deduplicate** — merge findings that describe the same issue across agents
 2. **Filter** — remove anything that matches an existing backlog item or a completed feature in memory.json
