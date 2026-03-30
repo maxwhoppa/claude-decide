@@ -213,8 +213,8 @@
       "source": "research-market",
       "cycle_added": 2,
       "priority_score": 0.78,
-      "status": "queued",
-      "notes": "Market research: skills marketplace is primary discovery channel in 2026 with 1000+ skills. Without presence, tool is invisible to target audience."
+      "status": "completed",
+      "notes": "Completed in cycle 8 with PRD-008. Plugin metadata enhanced, marketplace.json created, README updated with /plugin install as primary method."
     },
     {
       "id": "BL-025",

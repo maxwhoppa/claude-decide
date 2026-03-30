@@ -1,0 +1,17 @@
+{
+  "name": "claude-decide-marketplace",
+  "owner": {
+    "name": "maxwhoppa"
+  },
+  "plugins": [
+    {
+      "name": "claude-decide",
+      "source": ".",
+      "description": "Claude Operator — an autonomous continuous product builder that researches, plans, and executes improvements to any codebase.",
+      "version": "0.1.0",
+      "author": {
+        "name": "maxwhoppa"
+      }
+    }
+  ]
+}

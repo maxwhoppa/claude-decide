@@ -4,15 +4,23 @@ Autonomous product operator for Claude Code -- researches your codebase, generat
 
 ## Installation
 
+In Claude Code, run:
+
+```
+/plugin install maxwhoppa/claude-decide
+```
+
+This installs the plugin with its skills (`decide` and `decide-loop`) directly into Claude Code.
+
+### Alternative: Manual Installation
+
 Clone the repo and run the install script to copy skills into `~/.claude/skills/`:
 
 ```bash
-git clone <repo-url> claude-decide
+git clone https://github.com/maxwhoppa/claude-decide.git
 cd claude-decide
 bash install.sh
 ```
-
-The installer copies two skills (`decide` and `decide-loop`) into your local Claude Code skills directory.
 
 ## Quick Start
 

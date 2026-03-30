@@ -2,5 +2,22 @@
   "name": "claude-decide",
   "description": "Claude Operator — an autonomous continuous product builder that researches, plans, and executes improvements to any codebase.",
   "version": "0.1.0",
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "author": {
+    "name": "maxwhoppa"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxwhoppa/claude-decide.git"
+  },
+  "homepage": "https://github.com/maxwhoppa/claude-decide",
+  "keywords": [
+    "autonomous",
+    "operator",
+    "prd",
+    "product",
+    "research",
+    "continuous-improvement",
+    "code-audit"
+  ]
 }
