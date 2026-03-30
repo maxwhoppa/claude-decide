@@ -23,7 +23,7 @@ Fields:
 - `cycle`: integer, increments after each complete cycle
 - `mode`: "default" | "force" | "auto"
 - `auto_threshold`: float (0.0-1.0), default 0.75. Only used when mode is "auto". PRDs with backlog priority_score >= this value are auto-approved; below this value routes to collaboration.
-- `current_prd`: filename of the PRD being executed (e.g., "003-rate-limiting.md"), or null
+- `current_prd`: filename of the PRD being executed, or null. Must match pattern `NNN-[a-z0-9-]+.md` where NNN is a zero-padded 3-digit number and the name portion is max 50 characters (e.g., "003-rate-limiting.md"). See Propose Phase Step 1 for sanitization rules.
 - `last_completed`: ISO timestamp of the last completed cycle
 
 ## memory.json

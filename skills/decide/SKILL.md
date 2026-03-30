@@ -422,12 +422,24 @@ Read `${CLAUDE_SKILL_DIR}/prompts/prd-template.md` for the template.
 
 Determine the next PRD number by counting existing files in `.claude-operator/prds/`.
 
+**Sanitize the feature name for the filename:**
+1. Take the candidate idea title (e.g., from the backlog item)
+2. Lowercase the entire string
+3. Replace spaces and underscores with hyphens
+4. Remove any character not matching `[a-z0-9-]`
+5. Collapse consecutive hyphens into a single hyphen
+6. Trim leading and trailing hyphens
+7. Truncate to 50 characters
+8. If the result is empty, use `unnamed-feature` as fallback
+
+The sanitized name must match: `[a-z0-9][a-z0-9-]*[a-z0-9]` (or a single character `[a-z0-9]`).
+
 Write a complete PRD for the candidate idea. Fill in every section using:
 - The research findings from this cycle
 - Product context from memory.json
 - The backlog item details
 
-Save to `.claude-operator/prds/NNN-feature-name.md`.
+Save to `.claude-operator/prds/NNN-sanitized-feature-name.md`.
 
 ### Step 2: Self-Critique
 

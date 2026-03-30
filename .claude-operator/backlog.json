@@ -2,7 +2,7 @@
   "items": [
     {
       "id": "BL-001",
-      "idea": "Make the operator a proper Claude Code slash command skill that can be invoked via / command — the entire experience should live within Claude Code, not require a bash launcher for default mode",
+      "idea": "Make the operator a proper Claude Code slash command skill that can be invoked via / command \u2014 the entire experience should live within Claude Code, not require a bash launcher for default mode",
       "source": "onboarding-wishlist",
       "cycle_added": 0,
       "priority_score": 0.95,
@@ -32,7 +32,7 @@
       "idea": "Add cost awareness / token budget tracking for subagent dispatches",
       "source": "onboarding-detected",
       "cycle_added": 0,
-      "priority_score": 0.40,
+      "priority_score": 0.4,
       "status": "queued",
       "notes": "7 parallel research agents per cycle could be expensive. Analytics agent confirmed: no cycle timing exists."
     },
@@ -50,13 +50,13 @@
       "idea": "End-to-end test against a real target codebase to validate the full cycle works",
       "source": "onboarding-detected",
       "cycle_added": 0,
-      "priority_score": 0.70,
+      "priority_score": 0.7,
       "status": "completed",
       "notes": "Completed in cycle 14 with PRD-014. Implemented as validate.sh structural integrity checker. True E2E validated by 13+ cycles of self-operation. Also fixed 2 old cycle logs with schema drift."
     },
     {
       "id": "BL-007",
-      "idea": "Fix force mode launcher to load full SKILL.md instructions instead of a one-line prompt — currently bypasses all guardrails and constraints",
+      "idea": "Fix force mode launcher to load full SKILL.md instructions instead of a one-line prompt \u2014 currently bypasses all guardrails and constraints",
       "source": "research-code-auditor",
       "cycle_added": 1,
       "priority_score": 0.85,
@@ -65,7 +65,7 @@
     },
     {
       "id": "BL-008",
-      "idea": "Add backlog inspection, status, and history commands — users can't see what the operator knows or has done without reading JSON files",
+      "idea": "Add backlog inspection, status, and history commands \u2014 users can't see what the operator knows or has done without reading JSON files",
       "source": "research-product-gap",
       "cycle_added": 1,
       "priority_score": 0.65,
@@ -74,19 +74,19 @@
     },
     {
       "id": "BL-009",
-      "idea": "Add session re-entry for collaborate phase — if user closes Claude Code mid-conversation, next invocation should restore context and resume",
+      "idea": "Add session re-entry for collaborate phase \u2014 if user closes Claude Code mid-conversation, next invocation should restore context and resume",
       "source": "research-product-gap",
       "cycle_added": 1,
-      "priority_score": 0.60,
+      "priority_score": 0.6,
       "status": "queued",
       "notes": "Convergence: product gap + customer value."
     },
     {
       "id": "BL-010",
-      "idea": "Validate state.json before phase routing — check phase enum, mode enum, current_prd path containment. Prevents phase injection and path traversal.",
+      "idea": "Validate state.json before phase routing \u2014 check phase enum, mode enum, current_prd path containment. Prevents phase injection and path traversal.",
       "source": "research-security",
       "cycle_added": 1,
-      "priority_score": 0.70,
+      "priority_score": 0.7,
       "status": "completed",
       "notes": "Completed in cycle 11 with PRD-011. Phase Router Step 3b validates phase, mode, and current_prd with self-healing fallbacks."
     },
@@ -95,7 +95,7 @@
       "idea": "Add cycle timing, per-agent research stats, and structured feedback outcomes to cycle logs",
       "source": "research-analytics",
       "cycle_added": 1,
-      "priority_score": 0.50,
+      "priority_score": 0.5,
       "status": "queued",
       "notes": "Analytics agent: currently impossible to know phase durations, agent contribution, or PRD acceptance rates."
     },
@@ -113,16 +113,16 @@
       "idea": "Store priority scoring rationale alongside each backlog item and surface it during collaboration",
       "source": "research-customer-value",
       "cycle_added": 1,
-      "priority_score": 0.50,
+      "priority_score": 0.5,
       "status": "queued",
       "notes": "Convergence: customer value + experimentation. Reduces black-box feeling."
     },
     {
       "id": "BL-014",
-      "idea": "Add persistent stuck event history (stuck_history.json) — currently stuck events are ephemeral and deleted on resolution",
+      "idea": "Add persistent stuck event history (stuck_history.json) \u2014 currently stuck events are ephemeral and deleted on resolution",
       "source": "research-analytics",
       "cycle_added": 1,
-      "priority_score": 0.40,
+      "priority_score": 0.4,
       "status": "queued",
       "notes": "Analytics: biggest reliability blind spot."
     },
@@ -131,7 +131,7 @@
       "idea": "Add memory update command and operator inbox for async context injection post-onboarding",
       "source": "research-product-gap",
       "cycle_added": 1,
-      "priority_score": 0.50,
+      "priority_score": 0.5,
       "status": "queued",
       "notes": "Product gap + customer value: memory is write-once, operator context drifts from reality."
     },
@@ -149,7 +149,7 @@
       "idea": "Transition backlog items to 'proposed' status during propose phase and extract meta-research prompt to separate file",
       "source": "research-code-auditor",
       "cycle_added": 1,
-      "priority_score": 0.40,
+      "priority_score": 0.4,
       "status": "queued",
       "notes": "Code auditor: prevents duplicate PRD on restart, follows prompt externalization pattern."
     },
@@ -164,7 +164,7 @@
     },
     {
       "id": "BL-019",
-      "idea": "Add git branch isolation — each execution cycle runs on a dated branch, optionally opens draft PR",
+      "idea": "Add git branch isolation \u2014 each execution cycle runs on a dated branch, optionally opens draft PR",
       "source": "research-market",
       "cycle_added": 1,
       "priority_score": 0.55,
@@ -173,7 +173,7 @@
     },
     {
       "id": "BL-020",
-      "idea": "Add onboarding confirmation step — show summary of what was captured before starting first research cycle",
+      "idea": "Add onboarding confirmation step \u2014 show summary of what was captured before starting first research cycle",
       "source": "research-product-gap",
       "cycle_added": 1,
       "priority_score": 0.45,
@@ -182,25 +182,25 @@
     },
     {
       "id": "BL-021",
-      "idea": "Fix critical shell injection in launcher.sh — SKILL_CONTENTS variable interpolated unquoted into claude -p command allows arbitrary command execution",
+      "idea": "Fix critical shell injection in launcher.sh \u2014 SKILL_CONTENTS variable interpolated unquoted into claude -p command allows arbitrary command execution",
       "source": "research-security",
       "cycle_added": 2,
-      "priority_score": 0.90,
+      "priority_score": 0.9,
       "status": "completed",
       "notes": "Completed in cycle 2 with PRD-002 (combined with BL-007). Shell injection eliminated via heredoc with single-quoted delimiter."
     },
     {
       "id": "BL-022",
-      "idea": "Quick onboarding mode — infer answers from repo analysis, reduce mandatory questions from 11 to 3-4 confirmations",
+      "idea": "Quick onboarding mode \u2014 infer answers from repo analysis, reduce mandatory questions from 11 to 3-4 confirmations",
       "source": "research-customer-value",
       "cycle_added": 2,
-      "priority_score": 0.80,
+      "priority_score": 0.8,
       "status": "completed",
       "notes": "Completed in cycle 3 with PRD-003. Onboarding now uses confidence-scored summary table with fallback to full interview."
     },
     {
       "id": "BL-023",
-      "idea": "Add progress indicators during long-running phases — show which phase is active, agent dispatch status, and phase completion",
+      "idea": "Add progress indicators during long-running phases \u2014 show which phase is active, agent dispatch status, and phase completion",
       "source": "research-product-gap",
       "cycle_added": 2,
       "priority_score": 0.78,
@@ -218,7 +218,7 @@
     },
     {
       "id": "BL-025",
-      "idea": "Add installation mechanism — install.sh script or npx command for going from GitHub to running /decide in under 60 seconds",
+      "idea": "Add installation mechanism \u2014 install.sh script or npx command for going from GitHub to running /decide in under 60 seconds",
       "source": "research-customer-value",
       "cycle_added": 2,
       "priority_score": 0.75,
@@ -227,7 +227,7 @@
     },
     {
       "id": "BL-026",
-      "idea": "Pre-flight check for superpowers plugin dependency during onboarding — verify brainstorming, writing-plans, and executing-plans skills exist before proceeding",
+      "idea": "Pre-flight check for superpowers plugin dependency during onboarding \u2014 verify brainstorming, writing-plans, and executing-plans skills exist before proceeding",
       "source": "research-code-auditor",
       "cycle_added": 2,
       "priority_score": 0.75,
@@ -236,7 +236,7 @@
     },
     {
       "id": "BL-027",
-      "idea": "Adaptive research agent selection — dispatch 3-5 agents per cycle based on codebase type and product stage instead of all 7",
+      "idea": "Adaptive research agent selection \u2014 dispatch 3-5 agents per cycle based on codebase type and product stage instead of all 7",
       "source": "research-code-auditor",
       "cycle_added": 2,
       "priority_score": 0.72,
@@ -245,16 +245,16 @@
     },
     {
       "id": "BL-028",
-      "idea": "Add /decide reset command for clean re-onboarding — confirm with user, remove .claude-operator/, optionally preserve backlog",
+      "idea": "Add /decide reset command for clean re-onboarding \u2014 confirm with user, remove .claude-operator/, optionally preserve backlog",
       "source": "research-product-gap",
       "cycle_added": 2,
-      "priority_score": 0.70,
+      "priority_score": 0.7,
       "status": "completed",
       "notes": "Completed in cycle 12 with PRD-012. Reset Phase added to SKILL.md with confirmation, backlog preservation, and force mode support."
     },
     {
       "id": "BL-029",
-      "idea": "Confidence-gated auto-approval — auto-approve PRDs above user-defined trust threshold, creating a middle ground between force and default mode",
+      "idea": "Confidence-gated auto-approval \u2014 auto-approve PRDs above user-defined trust threshold, creating a middle ground between force and default mode",
       "source": "research-experimentation",
       "cycle_added": 2,
       "priority_score": 0.72,
@@ -263,7 +263,7 @@
     },
     {
       "id": "BL-030",
-      "idea": "Post-execution satisfaction signal — ask user to rate cycle output, use ratings to calibrate priority scoring in future cycles",
+      "idea": "Post-execution satisfaction signal \u2014 ask user to rate cycle output, use ratings to calibrate priority scoring in future cycles",
       "source": "research-customer-value",
       "cycle_added": 2,
       "priority_score": 0.72,
@@ -272,7 +272,7 @@
     },
     {
       "id": "BL-031",
-      "idea": "Add /decide rollback command — read last cycle log commit hash, offer git revert, mark backlog item as rejected",
+      "idea": "Add /decide rollback command \u2014 read last cycle log commit hash, offer git revert, mark backlog item as rejected",
       "source": "research-product-gap",
       "cycle_added": 2,
       "priority_score": 0.68,
@@ -281,7 +281,7 @@
     },
     {
       "id": "BL-032",
-      "idea": "Inject user collaboration feedback into execution subagent prompt — nuanced approval conditions are currently lost in handoff",
+      "idea": "Inject user collaboration feedback into execution subagent prompt \u2014 nuanced approval conditions are currently lost in handoff",
       "source": "research-customer-value",
       "cycle_added": 2,
       "priority_score": 0.65,
@@ -290,39 +290,39 @@
     },
     {
       "id": "BL-033",
-      "idea": "Add objective success metrics per execution cycle — test coverage delta, lint errors, bundle size — for verifiable improvement (Karpathy Loop pattern)",
+      "idea": "Add objective success metrics per execution cycle \u2014 test coverage delta, lint errors, bundle size \u2014 for verifiable improvement (Karpathy Loop pattern)",
       "source": "research-market",
       "cycle_added": 2,
-      "priority_score": 0.60,
+      "priority_score": 0.6,
       "status": "queued",
       "notes": "Market research: Karpathy autoresearch loop succeeds because each iteration has measurable criteria. Currently only 'did it compile' verification."
     },
     {
       "id": "BL-034",
-      "idea": "Add /decide stats command — aggregate cycle metrics: total cycles, success rate, top research agents, PRD acceptance rate, backlog velocity",
+      "idea": "Add /decide stats command \u2014 aggregate cycle metrics: total cycles, success rate, top research agents, PRD acceptance rate, backlog velocity",
       "source": "research-analytics",
       "cycle_added": 2,
-      "priority_score": 0.60,
+      "priority_score": 0.6,
       "status": "queued",
       "notes": "Analytics: distinct from BL-008 (backlog inspection). This computes aggregate metrics across all cycle logs. 20+ cycles = 20+ JSON files to read manually."
     },
     {
       "id": "BL-035",
-      "idea": "Sanitize backlog content before re-injection into research prompts — break circular prompt injection chain where one compromised cycle poisons all future cycles",
+      "idea": "Sanitize backlog content before re-injection into research prompts \u2014 break circular prompt injection chain where one compromised cycle poisons all future cycles",
       "source": "research-security",
       "cycle_added": 2,
       "priority_score": 0.65,
       "status": "queued",
-      "notes": "Security high severity. Distinct from BL-016 (XML tag wrapping) — this is about the circular re-injection amplification pattern across cycles."
+      "notes": "Security high severity. Distinct from BL-016 (XML tag wrapping) \u2014 this is about the circular re-injection amplification pattern across cycles."
     },
     {
       "id": "BL-036",
-      "idea": "Sanitize PRD filenames — strip path separators and enforce strict naming pattern to prevent path traversal during PRD write and read",
+      "idea": "Sanitize PRD filenames \u2014 strip path separators and enforce strict naming pattern to prevent path traversal during PRD write and read",
       "source": "research-security",
       "cycle_added": 2,
       "priority_score": 0.65,
-      "status": "queued",
-      "notes": "Security high severity. Feature name from research agent output used unsanitized as filename. Small effort fix."
+      "status": "completed",
+      "notes": "Completed in cycle 16 with PRD-016. Sanitization rules added to SKILL.md Propose Phase Step 1 and documented in state-templates.md."
     }
   ]
 }

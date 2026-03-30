@@ -1,10 +1,10 @@
 {
   "product": {
     "name": "Claude Operator (claude-decide)",
-    "description": "A Claude Code skill/plugin that acts as an autonomous product manager and developer — continuously researches a target codebase, generates PRDs, collaborates with the user, and executes improvements via an on-disk state machine cycle.",
+    "description": "A Claude Code skill/plugin that acts as an autonomous product manager and developer \u2014 continuously researches a target codebase, generates PRDs, collaborates with the user, and executes improvements via an on-disk state machine cycle.",
     "stage": "pre-launch",
     "customer": "Engineers and vibe coders",
-    "problem": "Developers leave significant value unrealized due to idle time — Claude Operator eliminates this by continuously iterating on code without relying on the user for direction.",
+    "problem": "Developers leave significant value unrealized due to idle time \u2014 Claude Operator eliminates this by continuously iterating on code without relying on the user for direction.",
     "revenue_model": "Free and open source"
   },
   "features": [
@@ -22,48 +22,162 @@
     "Bash launcher script for force mode",
     "/decide slash command for invoking operator from Claude Code",
     "Secure force mode launcher with shell injection fix, temp file prompt construction, paused state handling, and max-cycles safety limit",
-    "Quick onboarding mode — repo analysis pre-fills all 11 fields with confidence scores, user confirms via summary table instead of 11 sequential questions",
-    "Progress indicators — phase banners, agent dispatch status, synthesis summaries, and transition markers during all phases",
+    "Quick onboarding mode \u2014 repo analysis pre-fills all 11 fields with confidence scores, user confirms via summary table instead of 11 sequential questions",
+    "Progress indicators \u2014 phase banners, agent dispatch status, synthesis summaries, and transition markers during all phases",
     "README.md with installation guide, quick start, invocation modes, cycle phases, and project structure",
     "Pre-flight check during onboarding warns if superpowers skills are missing",
-    "Adaptive research agent selection — dispatches 3-5 agents per cycle based on product stage and tech stack",
+    "Adaptive research agent selection \u2014 dispatches 3-5 agents per cycle based on product stage and tech stack",
     "Marketplace-ready plugin metadata with author, repository, homepage, keywords in plugin.json and self-hosted marketplace.json",
-    "Confidence-gated auto-approval mode — auto mode with configurable threshold auto-approves high-priority PRDs while routing lower-scored ones to collaboration",
-    "Post-execution satisfaction signal — 1-5 rating prompt after Update Memory phase for default/auto modes, stored in cycle logs and satisfaction_history",
-    "State validation before phase routing — validates phase enum, mode enum, and current_prd path safety in Phase Router Step 3b",
-    "/decide reset command — clean re-onboarding with optional backlog preservation",
-    "/decide rollback command — reverts most recent cycle commit with confirmation and backlog rejection",
-    "Operator validation script (validate.sh) — checks state.json, backlog.json, memory.json, cycle logs, and cross-references",
-    "/decide status and /decide backlog commands — read-only inspection of operator state and queued work"
+    "Confidence-gated auto-approval mode \u2014 auto mode with configurable threshold auto-approves high-priority PRDs while routing lower-scored ones to collaboration",
+    "Post-execution satisfaction signal \u2014 1-5 rating prompt after Update Memory phase for default/auto modes, stored in cycle logs and satisfaction_history",
+    "State validation before phase routing \u2014 validates phase enum, mode enum, and current_prd path safety in Phase Router Step 3b",
+    "/decide reset command \u2014 clean re-onboarding with optional backlog preservation",
+    "/decide rollback command \u2014 reverts most recent cycle commit with confirmation and backlog rejection",
+    "Operator validation script (validate.sh) \u2014 checks state.json, backlog.json, memory.json, cycle logs, and cross-references",
+    "/decide status and /decide backlog commands \u2014 read-only inspection of operator state and queued work",
+    "PRD filename sanitization in Propose Phase -- prevents path traversal via unsanitized feature names"
   ],
   "feature_history": [
-    { "feature": "Onboarding with automated repo analysis and user interview", "source": "onboarding", "cycle": 0 },
-    { "feature": "7 parallel research agents", "source": "onboarding", "cycle": 0 },
-    { "feature": "PRD generation with fixed template", "source": "onboarding", "cycle": 0 },
-    { "feature": "5-lens PRD self-critique", "source": "onboarding", "cycle": 0 },
-    { "feature": "Interactive collaboration phase", "source": "onboarding", "cycle": 0 },
-    { "feature": "Autonomous execution via superpowers pipeline", "source": "onboarding", "cycle": 0 },
-    { "feature": "Stuck detection and recovery", "source": "onboarding", "cycle": 0 },
-    { "feature": "On-disk state machine", "source": "onboarding", "cycle": 0 },
-    { "feature": "Force mode", "source": "onboarding", "cycle": 0 },
-    { "feature": "Meta-research fallback", "source": "onboarding", "cycle": 0 },
-    { "feature": "Graceful stop", "source": "onboarding", "cycle": 0 },
-    { "feature": "Bash launcher script for force mode", "source": "onboarding", "cycle": 0 },
-    { "feature": "/decide slash command for invoking operator from Claude Code", "source": "operator-built", "cycle": 1 },
-    { "feature": "Secure force mode launcher with shell injection fix, paused state handling, and max-cycles limit", "source": "operator-built", "cycle": 2 },
-    { "feature": "Quick onboarding mode with confidence-based summary and fallback", "source": "operator-built", "cycle": 3 },
-    { "feature": "Progress indicators for all phases", "source": "operator-built", "cycle": 4 },
-    { "feature": "README.md with installation and usage guide", "source": "operator-built", "cycle": 5 },
-    { "feature": "Pre-flight superpowers check during onboarding", "source": "operator-built", "cycle": 6 },
-    { "feature": "Adaptive research agent selection", "source": "operator-built", "cycle": 7 },
-    { "feature": "Marketplace-ready plugin metadata and self-hosted marketplace manifest", "source": "operator-built", "cycle": 8 },
-    { "feature": "Confidence-gated auto-approval mode", "source": "operator-built", "cycle": 9 },
-    { "feature": "Post-execution satisfaction signal", "source": "operator-built", "cycle": 10 },
-    { "feature": "State validation before phase routing", "source": "operator-built", "cycle": 11 },
-    { "feature": "/decide reset command", "source": "operator-built", "cycle": 12 },
-    { "feature": "/decide rollback command", "source": "operator-built", "cycle": 13 },
-    { "feature": "Operator validation script", "source": "operator-built", "cycle": 14 },
-    { "feature": "/decide status and /decide backlog commands", "source": "operator-built", "cycle": 15 }
+    {
+      "feature": "Onboarding with automated repo analysis and user interview",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "7 parallel research agents",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "PRD generation with fixed template",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "5-lens PRD self-critique",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "Interactive collaboration phase",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "Autonomous execution via superpowers pipeline",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "Stuck detection and recovery",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "On-disk state machine",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "Force mode",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "Meta-research fallback",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "Graceful stop",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "Bash launcher script for force mode",
+      "source": "onboarding",
+      "cycle": 0
+    },
+    {
+      "feature": "/decide slash command for invoking operator from Claude Code",
+      "source": "operator-built",
+      "cycle": 1
+    },
+    {
+      "feature": "Secure force mode launcher with shell injection fix, paused state handling, and max-cycles limit",
+      "source": "operator-built",
+      "cycle": 2
+    },
+    {
+      "feature": "Quick onboarding mode with confidence-based summary and fallback",
+      "source": "operator-built",
+      "cycle": 3
+    },
+    {
+      "feature": "Progress indicators for all phases",
+      "source": "operator-built",
+      "cycle": 4
+    },
+    {
+      "feature": "README.md with installation and usage guide",
+      "source": "operator-built",
+      "cycle": 5
+    },
+    {
+      "feature": "Pre-flight superpowers check during onboarding",
+      "source": "operator-built",
+      "cycle": 6
+    },
+    {
+      "feature": "Adaptive research agent selection",
+      "source": "operator-built",
+      "cycle": 7
+    },
+    {
+      "feature": "Marketplace-ready plugin metadata and self-hosted marketplace manifest",
+      "source": "operator-built",
+      "cycle": 8
+    },
+    {
+      "feature": "Confidence-gated auto-approval mode",
+      "source": "operator-built",
+      "cycle": 9
+    },
+    {
+      "feature": "Post-execution satisfaction signal",
+      "source": "operator-built",
+      "cycle": 10
+    },
+    {
+      "feature": "State validation before phase routing",
+      "source": "operator-built",
+      "cycle": 11
+    },
+    {
+      "feature": "/decide reset command",
+      "source": "operator-built",
+      "cycle": 12
+    },
+    {
+      "feature": "/decide rollback command",
+      "source": "operator-built",
+      "cycle": 13
+    },
+    {
+      "feature": "Operator validation script",
+      "source": "operator-built",
+      "cycle": 14
+    },
+    {
+      "feature": "/decide status and /decide backlog commands",
+      "source": "operator-built",
+      "cycle": 15
+    },
+    {
+      "feature": "PRD filename sanitization",
+      "source": "operator-built",
+      "cycle": 16
+    }
   ],
   "constraints": [],
   "assumptions": [
@@ -71,7 +185,7 @@
     "Target projects have a git repository initialized"
   ],
   "known_gaps": [
-        "No tests",
+    "No tests",
     "No CI/CD",
     "No .gitignore",
     "No cost awareness for subagent dispatches",
@@ -80,21 +194,95 @@
     "Launcher script still used for force mode continuous loop (acceptable, now secured)"
   ],
   "past_decisions": [
-    { "cycle": 1, "decision": "Renamed skill to 'decide' for /decide slash command. Skill now invocable natively in Claude Code.", "prd": "001-slash-command-skill.md" },
-    { "cycle": 2, "decision": "Rewrote force mode launcher to fix critical shell injection and ensure full SKILL.md instruction loading. Added paused state handling and max-cycles safety limit.", "prd": "002-fix-force-mode-launcher.md" },
-    { "cycle": 3, "decision": "Replaced 11-question sequential onboarding with confidence-scored summary table. Users confirm/correct in 2-3 exchanges. Fallback to full interview for empty repos.", "prd": "003-quick-onboarding.md", "lessons": "Repo analysis output maps cleanly to all onboarding fields but revenue model and git tracking always need explicit asking." },
-    { "cycle": 4, "decision": "Added progress indicators to all phases — banners, dispatch status, synthesis summaries, transition markers.", "prd": "004-progress-indicators.md" },
-    { "cycle": 5, "decision": "Added README.md with installation, quick start, invocation modes, cycle phases, and project structure.", "prd": "005-readme.md" },
-    { "cycle": 6, "decision": "Added pre-flight check during onboarding that warns if superpowers skills are missing.", "prd": "006-preflight-check.md" },
-    { "cycle": 7, "decision": "Research phase now selects 3-5 agents based on product stage and tech stack instead of all 7.", "prd": "007-adaptive-research.md" },
-    { "cycle": 8, "decision": "Added marketplace metadata to plugin.json, created marketplace.json manifest, and updated README to lead with /plugin install.", "prd": "008-marketplace-publishing.md" },
-    { "cycle": 9, "decision": "Added auto mode with configurable threshold for confidence-gated PRD approval. Third mode alongside default and force.", "prd": "009-confidence-gated-auto-approval.md" },
-    { "cycle": 10, "decision": "Added satisfaction rating prompt (1-5) to Update Memory phase for default/auto modes. Stored in cycle logs and satisfaction_history in memory.json. Force mode auto-skips.", "prd": "010-satisfaction-signal.md" },
-    { "cycle": 11, "decision": "Added state.json validation in Phase Router Step 3b. Checks phase enum, mode enum, and current_prd path safety. Self-heals with warnings.", "prd": "011-state-validation.md" },
-    { "cycle": 12, "decision": "Added /decide reset command with confirmation, optional backlog preservation, and force mode clean slate.", "prd": "012-reset-command.md" },
-    { "cycle": 13, "decision": "Added /decide rollback command that reverts most recent cycle's commit, confirms with user, marks backlog item as rejected.", "prd": "013-rollback-command.md" },
-    { "cycle": 14, "decision": "Added validate.sh script that checks structural integrity of all .claude-operator/ state files. Also fixed schema drift in 2 old cycle logs.", "prd": "014-validation-script.md", "lessons": "Validation script immediately found real issues — early cycle logs used prd_filename instead of prd. Validates the value of structural validation." },
-    { "cycle": 15, "decision": "Added /decide status and /decide backlog read-only inspection commands.", "prd": "015-backlog-inspection.md" }
+    {
+      "cycle": 1,
+      "decision": "Renamed skill to 'decide' for /decide slash command. Skill now invocable natively in Claude Code.",
+      "prd": "001-slash-command-skill.md"
+    },
+    {
+      "cycle": 2,
+      "decision": "Rewrote force mode launcher to fix critical shell injection and ensure full SKILL.md instruction loading. Added paused state handling and max-cycles safety limit.",
+      "prd": "002-fix-force-mode-launcher.md"
+    },
+    {
+      "cycle": 3,
+      "decision": "Replaced 11-question sequential onboarding with confidence-scored summary table. Users confirm/correct in 2-3 exchanges. Fallback to full interview for empty repos.",
+      "prd": "003-quick-onboarding.md",
+      "lessons": "Repo analysis output maps cleanly to all onboarding fields but revenue model and git tracking always need explicit asking."
+    },
+    {
+      "cycle": 4,
+      "decision": "Added progress indicators to all phases \u2014 banners, dispatch status, synthesis summaries, transition markers.",
+      "prd": "004-progress-indicators.md"
+    },
+    {
+      "cycle": 5,
+      "decision": "Added README.md with installation, quick start, invocation modes, cycle phases, and project structure.",
+      "prd": "005-readme.md"
+    },
+    {
+      "cycle": 6,
+      "decision": "Added pre-flight check during onboarding that warns if superpowers skills are missing.",
+      "prd": "006-preflight-check.md"
+    },
+    {
+      "cycle": 7,
+      "decision": "Research phase now selects 3-5 agents based on product stage and tech stack instead of all 7.",
+      "prd": "007-adaptive-research.md"
+    },
+    {
+      "cycle": 8,
+      "decision": "Added marketplace metadata to plugin.json, created marketplace.json manifest, and updated README to lead with /plugin install.",
+      "prd": "008-marketplace-publishing.md"
+    },
+    {
+      "cycle": 9,
+      "decision": "Added auto mode with configurable threshold for confidence-gated PRD approval. Third mode alongside default and force.",
+      "prd": "009-confidence-gated-auto-approval.md"
+    },
+    {
+      "cycle": 10,
+      "decision": "Added satisfaction rating prompt (1-5) to Update Memory phase for default/auto modes. Stored in cycle logs and satisfaction_history in memory.json. Force mode auto-skips.",
+      "prd": "010-satisfaction-signal.md"
+    },
+    {
+      "cycle": 11,
+      "decision": "Added state.json validation in Phase Router Step 3b. Checks phase enum, mode enum, and current_prd path safety. Self-heals with warnings.",
+      "prd": "011-state-validation.md"
+    },
+    {
+      "cycle": 12,
+      "decision": "Added /decide reset command with confirmation, optional backlog preservation, and force mode clean slate.",
+      "prd": "012-reset-command.md"
+    },
+    {
+      "cycle": 13,
+      "decision": "Added /decide rollback command that reverts most recent cycle's commit, confirms with user, marks backlog item as rejected.",
+      "prd": "013-rollback-command.md"
+    },
+    {
+      "cycle": 14,
+      "decision": "Added validate.sh script that checks structural integrity of all .claude-operator/ state files. Also fixed schema drift in 2 old cycle logs.",
+      "prd": "014-validation-script.md",
+      "lessons": "Validation script immediately found real issues \u2014 early cycle logs used prd_filename instead of prd. Validates the value of structural validation."
+    },
+    {
+      "cycle": 15,
+      "decision": "Added /decide status and /decide backlog read-only inspection commands.",
+      "prd": "015-backlog-inspection.md"
+    },
+    {
+      "cycle": 16,
+      "decision": "Added explicit filename sanitization rules to Propose Phase Step 1. Feature names are lowercased, stripped of special chars, and truncated to 50 chars before use as PRD filenames.",
+      "prd": "016-sanitize-prd-filenames.md"
+    }
   ],
-  "experiments": []
+  "experiments": [],
+  "satisfaction_history": [
+    {
+      "cycle": 16,
+      "rating": null,
+      "prd": "016-sanitize-prd-filenames.md"
+    }
+  ]
 }
