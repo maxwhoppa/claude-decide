@@ -160,8 +160,10 @@ Read `state.json` — phase must be "research".
 
 ### Step 0: Check for Fast-Track
 
+Output: "**Research Phase**"
+
 Read `.claude-operator/backlog.json`. If there are ANY items with `status: "queued"`, skip the full research phase:
-- Output: "Fast-tracking — backlog has [N] queued items. Skipping research."
+- Output: "Fast-tracking — backlog has [N] queued items."
 - Pick the highest-priority queued item as this cycle's candidate.
 - Jump directly to **Step 5: Transition** (set phase to "propose").
 
@@ -172,6 +174,10 @@ Research only runs when the backlog is empty (all items completed, rejected, or 
 Read `.claude-operator/memory.json` and `.claude-operator/backlog.json`.
 
 ### Step 2: Dispatch Research Agents
+
+Count the total agents to dispatch: 7 standard + 1 if `.claude-operator/inputs/` has files + number of custom `.md` files in `.claude-operator/agents/`.
+
+Output: "Dispatching [N] research agents..."
 
 Dispatch ALL research agents IN PARALLEL using the Agent tool. For each agent:
 - Read the corresponding prompt file from `${CLAUDE_SKILL_DIR}/prompts/research-*.md`
@@ -219,6 +225,8 @@ After all 7 agents return:
 4. **Update backlog** — add new items to `backlog.json` with status "queued"
 5. **Pick candidate** — select the highest-priority queued item as this cycle's candidate
 
+Output: "Research complete — [N] findings, [M] new backlog items"
+
 ### Step 4: Check for Stagnation
 
 Read the last 3 cycle logs from `.claude-operator/logs/`. If all 3 cycles produced zero new backlog items, enter **meta-research mode**:
@@ -229,6 +237,8 @@ Read the last 3 cycle logs from `.claude-operator/logs/`. If all 3 cycles produc
 
 Update `state.json`: set phase to "propose", and store the candidate backlog item ID.
 
+Output: "Transitioning to Propose Phase..."
+
 Continue to the Propose Phase (same session).
 
 ---
@@ -236,6 +246,8 @@ Continue to the Propose Phase (same session).
 ## Propose Phase
 
 ### Step 1: Generate PRD
+
+Output: "**Propose Phase** — generating PRD for: [candidate idea title]"
 
 Read `${CLAUDE_SKILL_DIR}/prompts/prd-template.md` for the template.
 
@@ -266,10 +278,12 @@ This ensures the execution subagent never receives a PRD with unresolved questio
 ### Step 4: Transition
 
 If mode is "force":
+- Output: "Transitioning to Execute Phase..."
 - Update `state.json`: set phase to "execute", set `current_prd` to the PRD filename.
 - Exit. The next cycle will pick up execution.
 
 If mode is "default":
+- Output: "Transitioning to Collaborate Phase..."
 - Update `state.json`: set phase to "collaborate".
 - Continue to Collaborate Phase (same session).
 
@@ -339,6 +353,8 @@ Read `state.json` — phase must be "execute". Read `current_prd` to get the PRD
 
 ### Step 1: Dispatch Execution Subagent
 
+Output: "**Execute Phase** — implementing [PRD title]..."
+
 Read `${CLAUDE_SKILL_DIR}/prompts/execution.md` for the prompt template.
 
 Replace template variables:
@@ -357,6 +373,7 @@ Dispatch as a `general-purpose` subagent. This subagent will:
 ### Step 2: Process Result
 
 If the subagent returns a success result:
+- Output: "Transitioning to Update Memory Phase..."
 - Proceed to Update Memory phase (same session)
 
 If `.claude-operator/stuck.json` was created:
@@ -365,6 +382,8 @@ If `.claude-operator/stuck.json` was created:
 ---
 
 ## Update Memory Phase
+
+Output: "**Update Memory** — recording cycle results"
 
 ### Step 1: Annotate the PRD with Outcome
 
@@ -433,6 +452,8 @@ Update `state.json`:
 - Set `last_completed` to current ISO timestamp
 
 Output to the user: "Cycle N complete. Run /decide to start the next cycle." (where N is the cycle number that just finished).
+
+Output: "Transitioning to Research Phase..."
 
 Exit. The launcher starts the next cycle.
 
