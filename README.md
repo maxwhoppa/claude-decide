@@ -57,14 +57,34 @@ bash skills/decide/scripts/launcher.sh --force
 bash skills/decide/scripts/launcher.sh --force --max-cycles 10
 ```
 
+### `/decide auto` -- Confidence-Gated
+
+A middle ground between interactive and force mode. PRDs with a backlog priority score above a configurable threshold are auto-approved; lower-scored PRDs go through the interactive collaboration phase.
+
+```
+/decide auto              # threshold 0.75 (default)
+/decide auto 0.8          # threshold 0.80
+```
+
+Also available from the terminal:
+
+```bash
+bash skills/decide/scripts/launcher.sh --auto
+bash skills/decide/scripts/launcher.sh --auto=0.8
+```
+
 ### `/decide-loop` -- Continuous
 
-Runs `/decide force` in a continuous loop within a single Claude Code session. Cycles run back-to-back until a stop condition is met.
+Runs `/decide force` in a continuous loop. Each cycle executes in a fresh Claude session via `claude -p`, ensuring full superpowers skill access (brainstorming, writing-plans, executing-plans) on every cycle.
 
 ```
 /decide-loop              # run until stopped (default max: 50 cycles)
 /decide-loop 10           # run 10 cycles then stop
+/decide-loop edit         # review backlog before starting loop
+/decide-loop 5 edit       # review backlog, then run 5 cycles
 ```
+
+The `edit` flag presents all queued backlog items for review before starting. You can approve, reject, or reprioritize items.
 
 To stop gracefully between cycles:
 
@@ -72,19 +92,38 @@ To stop gracefully between cycles:
 touch .claude-operator/stop
 ```
 
+## Utility Commands
+
+| Command | Description |
+|---------|-------------|
+| `/decide status` | Show current cycle, phase, mode, and backlog summary |
+| `/decide backlog` | Show all queued items sorted by priority |
+| `/decide reset` | Delete `.claude-operator/` and start fresh (offers to preserve backlog) |
+| `/decide rollback` | Revert the most recent cycle's commit via `git revert` |
+
 ## Operator Cycle Phases
 
 Each cycle moves through these phases sequentially:
 
 | Phase | What happens |
 |-------|-------------|
-| **Research** | Dispatches 7+ parallel subagents to audit code quality, find product gaps, check security, analyze market fit, and more. Synthesizes findings into a prioritized backlog. |
-| **Propose** | Generates a full PRD for the highest-priority backlog item, then runs it through a 5-lens self-critique. |
-| **Collaborate** | (Interactive mode only) Presents the PRD for your review. You can approve, request changes, reject, redirect, or ask for more research. |
-| **Execute** | Dispatches a subagent to implement the PRD -- writes code, runs tests, and commits. Creates a `stuck.json` report if it can't resolve after 10 attempts. |
-| **Update Memory** | Records results in `memory.json`, updates the backlog, writes a cycle log, and commits all state changes. |
+| **Research** | Dispatches 3-5 parallel subagents (adaptive selection based on product stage) to audit code quality, find product gaps, check security, analyze market fit, and more. Synthesizes findings into a prioritized backlog. |
+| **Propose** | Generates a full PRD for the highest-priority backlog item, then runs it through a 5-lens self-critique. Sanitizes filenames to prevent path traversal. |
+| **Collaborate** | (Interactive/auto mode only) Presents the PRD for your review. You can approve, request changes, reject, redirect, or ask for more research. |
+| **Execute** | Implements the PRD via the superpowers pipeline: brainstorming, writing-plans, executing-plans. Creates a `stuck.json` report if it can't resolve after 10 attempts. |
+| **Update Memory** | Records results in `memory.json`, updates the backlog, writes a cycle log, commits all state changes, and optionally collects a satisfaction rating (1-5). |
 
-In force mode, the Collaborate phase is skipped and PRDs are auto-approved.
+In force mode, the Collaborate phase is skipped and PRDs are auto-approved. In auto mode, only PRDs below the confidence threshold go through Collaborate.
+
+## State Validation
+
+Run the validation script to check structural integrity of all operator state files:
+
+```bash
+bash skills/decide/scripts/validate.sh
+```
+
+Checks JSON syntax, enum values, required fields, and cross-references. Exits 0 if all checks pass, 1 if any fail.
 
 ## Project Structure
 
@@ -95,14 +134,15 @@ claude-decide/
     decide/
       SKILL.md                        # full phase router and operator logic
       prompts/                        # prompt templates for subagents
-        execution.md                  # execution subagent prompt
+        execution.md                  # execution constraints
         onboarding-repo-analysis.md   # repo analysis prompt
         prd-template.md               # PRD generation template
         prd-critic.md                 # 5-lens PRD critique
-        research-*.md                 # research agent prompts (7 standard)
+        research-*.md                 # research agent prompts
         state-templates.md            # JSON schemas for state files
       scripts/
-        launcher.sh                   # terminal launcher for force mode
+        launcher.sh                   # terminal launcher for force/auto mode
+        validate.sh                   # state file validation script
     decide-loop/
       SKILL.md                        # continuous loop skill definition
 ```
@@ -124,7 +164,7 @@ your-project/
 
 ## Customization
 
-**Custom research agents**: Add `.md` files to `.claude-operator/agents/` in your target project. Each file is used as a prompt template and dispatched alongside the 7 standard research agents during the Research phase.
+**Custom research agents**: Add `.md` files to `.claude-operator/agents/` in your target project. Each file is used as a prompt template and dispatched alongside the standard research agents during the Research phase.
 
 **User inputs**: Drop any files (markdown, text, JSON) into `.claude-operator/inputs/` to feed external context -- customer feedback, competitor analysis, user interviews -- into the research phase.
 
