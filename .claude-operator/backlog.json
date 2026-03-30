@@ -249,8 +249,8 @@
       "source": "research-product-gap",
       "cycle_added": 2,
       "priority_score": 0.70,
-      "status": "queued",
-      "notes": "Product gap: no way to uninstall, reset, or start fresh. Missing CRUD — has create (onboarding) but no delete."
+      "status": "completed",
+      "notes": "Completed in cycle 12 with PRD-012. Reset Phase added to SKILL.md with confirmation, backlog preservation, and force mode support."
     },
     {
       "id": "BL-029",

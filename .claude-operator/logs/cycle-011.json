@@ -27,7 +27,7 @@
     "skills/decide/SKILL.md"
   ],
   "tests_added": 0,
-  "commit": "pending",
+  "commit": "007feaf",
   "validation_notes": "No existing test suite. Verified by reading SKILL.md Phase Router section.",
   "memory_updates": [
     "Added 'State validation before phase routing' to features and feature_history",

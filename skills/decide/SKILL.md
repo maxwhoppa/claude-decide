@@ -26,6 +26,8 @@ bash skills/decide/scripts/launcher.sh --auto=0.8      # threshold 0.80
 
 Auto mode auto-approves PRDs whose backlog priority score meets the threshold, and routes lower-scored PRDs to the interactive collaborate phase.
 
+**Reset:** Run `/decide reset` to delete `.claude-operator/` and start fresh. Offers to preserve backlog. In force mode, resets without confirmation.
+
 ## Quick Reference
 
 ```
@@ -38,6 +40,7 @@ On every invocation:
 
 0. Check if args contain "force" → if `.claude-operator/state.json` exists, set its `mode` to "force" for this cycle. If state doesn't exist yet, remember to set mode to "force" during onboarding initialization.
    Check if args contain "auto" → set `mode` to "auto" in `state.json`. If the next argument is a number between 0.0 and 1.0, set `auto_threshold` to that value. Otherwise set `auto_threshold` to 0.75. If state doesn't exist yet, remember to set mode to "auto" during onboarding initialization.
+   Check if args contain "reset" → jump directly to **Reset Phase**. Skip all other routing.
 1. Check if `.claude-operator/` exists. If not → **Onboarding Phase**.
 2. Ensure all expected subdirectories exist: `mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs .claude-operator/inputs .claude-operator/agents` — this self-heals if directories were added in a newer version of the skill.
 3. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
@@ -182,6 +185,42 @@ If user said `.claude-operator/` should be git-tracked, do NOT add it to `.gitig
 Tell the user: "Onboarding complete. I'll start researching improvements now."
 
 Update `state.json` phase to "research" and exit. The launcher will restart for the first research cycle.
+
+---
+
+## Reset Phase
+
+Triggered when args contain "reset".
+
+### Step 1: Check if operator exists
+
+If `.claude-operator/` does not exist, output: "Nothing to reset — operator has not been onboarded yet." and exit.
+
+### Step 2: Confirm (interactive modes only)
+
+If mode is "force":
+- Skip confirmation. Proceed directly to Step 4 (delete without preserving backlog).
+
+If mode is "default" or "auto" (or no mode specified):
+- Output: "This will delete .claude-operator/ and all operator state (memory, backlog, logs, PRDs). Proceed? (yes/no)"
+- Wait for user input. Only proceed on explicit "yes". On anything else, output "Reset cancelled." and exit.
+
+### Step 3: Offer backlog preservation (interactive modes only)
+
+- Output: "Preserve the current backlog? (yes/no)"
+- If "yes": read `.claude-operator/backlog.json` and hold its contents in memory for restoration after deletion.
+- If "no" or anything else: proceed without preservation.
+
+### Step 4: Delete
+
+- Run `rm -rf .claude-operator/`
+- If backlog was preserved (Step 3), write the saved backlog contents to a temporary location (e.g., `/tmp/claude-operator-backlog-backup.json`). During the next onboarding, check for this file, restore it to `.claude-operator/backlog.json`, and delete the temp file.
+
+### Step 5: Exit
+
+Output: "Operator reset complete. Run /decide to start fresh onboarding."
+
+Exit.
 
 ---
 

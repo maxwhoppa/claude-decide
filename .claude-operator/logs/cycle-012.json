@@ -1,0 +1,42 @@
+{
+  "cycle": 12,
+  "timestamp": "2026-03-30T00:40:00Z",
+  "research_findings": {
+    "summary": "Fast-tracked — backlog had 17 queued items. Picked BL-028 (/decide reset command, priority 0.70).",
+    "new_backlog_items": 0
+  },
+  "proposed_idea": "BL-028: Add /decide reset command for clean re-onboarding with optional backlog preservation",
+  "user_feedback": "N/A — force mode, auto-approved",
+  "prd": "012-reset-command.md",
+  "execution_result": "success",
+  "requirements_verification": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "details": [
+      "Req 1: /decide reset triggers reset flow — PASS (Phase Router Step 0)",
+      "Req 2: confirm in default/auto — PASS (Reset Phase Step 2)",
+      "Req 3: offer backlog preservation — PASS (Reset Phase Step 3)",
+      "Req 4: force mode skips confirmation — PASS (Reset Phase Step 2)",
+      "Req 5: exit message — PASS (Reset Phase Step 5)",
+      "Req 6: documented in Phase Router — PASS (line 43)"
+    ]
+  },
+  "approach_deviations": "None",
+  "lessons_learned": "None",
+  "files_changed": [
+    "skills/decide/SKILL.md"
+  ],
+  "tests_added": 0,
+  "commit": "pending",
+  "validation_notes": "No existing test suite. Verified by reading SKILL.md Reset Phase section.",
+  "memory_updates": [
+    "Added '/decide reset command' to features and feature_history",
+    "Added cycle 12 past_decision",
+    "Marked BL-028 as completed"
+  ],
+  "satisfaction": {
+    "rating": null,
+    "comment": "force mode — skipped"
+  }
+}
