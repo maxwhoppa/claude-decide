@@ -30,6 +30,10 @@ Auto mode auto-approves PRDs whose backlog priority score meets the threshold, a
 
 **Rollback:** Run `/decide rollback` to revert the most recent cycle's commit. Confirms before reverting (force mode skips confirmation).
 
+**Status:** Run `/decide status` to see current cycle, phase, mode, and backlog summary.
+
+**Backlog:** Run `/decide backlog` to see all queued items sorted by priority.
+
 ## Quick Reference
 
 ```
@@ -44,6 +48,8 @@ On every invocation:
    Check if args contain "auto" → set `mode` to "auto" in `state.json`. If the next argument is a number between 0.0 and 1.0, set `auto_threshold` to that value. Otherwise set `auto_threshold` to 0.75. If state doesn't exist yet, remember to set mode to "auto" during onboarding initialization.
    Check if args contain "reset" → jump directly to **Reset Phase**. Skip all other routing.
    Check if args contain "rollback" → jump directly to **Rollback Phase**. Skip all other routing.
+   Check if args contain "status" → jump directly to **Status Phase**. Skip all other routing.
+   Check if args contain "backlog" → jump directly to **Backlog Phase**. Skip all other routing.
 1. Check if `.claude-operator/` exists. If not → **Onboarding Phase**.
 2. Ensure all expected subdirectories exist: `mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs .claude-operator/inputs .claude-operator/agents` — this self-heals if directories were added in a newer version of the skill.
 3. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
@@ -259,6 +265,55 @@ If mode is "default" or "auto" (or no mode specified):
 - Find the backlog item corresponding to the rolled-back PRD. Mark it as "rejected" with note: "Rolled back by user after cycle [N]".
 - Output: "Cycle [N] rolled back successfully. The backlog item has been marked as rejected."
 - Exit.
+
+---
+
+## Status Phase
+
+Triggered when args contain "status". Read-only — no state changes.
+
+If `.claude-operator/` does not exist, output: "Operator not initialized. Run /decide to start." and exit.
+
+Read `state.json` and `backlog.json`. Output:
+
+```
+Operator Status
+  Cycle:          [N]
+  Phase:          [phase]
+  Mode:           [mode]
+  Last completed: [timestamp or "never"]
+  Current PRD:    [filename or "none"]
+
+Backlog:
+  Queued:    [N] items
+  Completed: [N] items
+  Rejected:  [N] items
+```
+
+Exit.
+
+---
+
+## Backlog Phase
+
+Triggered when args contain "backlog". Read-only — no state changes.
+
+If `.claude-operator/` does not exist, output: "Operator not initialized. Run /decide to start." and exit.
+
+Read `backlog.json`. Filter to items with `status: "queued"`, sorted by `priority_score` descending. Output:
+
+```
+Queued backlog items ([N] total):
+
+| ID | Priority | Idea |
+|----|----------|------|
+| BL-008 | 0.65 | Add backlog inspection, status, and history co... |
+| ... | ... | ... |
+```
+
+If no queued items, output: "No queued backlog items. Run /decide to start a research cycle."
+
+Exit.
 
 ---
 

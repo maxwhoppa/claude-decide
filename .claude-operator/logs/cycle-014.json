@@ -2,11 +2,11 @@
   "cycle": 14,
   "timestamp": "2026-03-30T01:20:00Z",
   "research_findings": {
-    "summary": "Fast-tracked — backlog had 21 queued items (post-review). Picked BL-006 (E2E test, priority 0.70).",
+    "summary": "Fast-tracked \u2014 backlog had 21 queued items (post-review). Picked BL-006 (E2E test, priority 0.70).",
     "new_backlog_items": 0
   },
-  "proposed_idea": "BL-006: End-to-end test against a real target codebase — implemented as structural validation script",
-  "user_feedback": "N/A — force mode, auto-approved",
+  "proposed_idea": "BL-006: End-to-end test against a real target codebase \u2014 implemented as structural validation script",
+  "user_feedback": "N/A \u2014 force mode, auto-approved",
   "prd": "014-validation-script.md",
   "execution_result": "success",
   "requirements_verification": {
@@ -14,17 +14,17 @@
     "passed": 8,
     "failed": 0,
     "details": [
-      "Req 1: validate.sh runs all checks — PASS",
-      "Req 2: exit code 0 on success, 1 on failure — PASS",
-      "Req 3: state.json validated — PASS",
-      "Req 4: backlog.json validated — PASS",
-      "Req 5: memory.json validated — PASS",
-      "Req 6: cycle logs validated — PASS",
-      "Req 7: cross-references checked — PASS",
-      "Req 8: summary output — PASS"
+      "Req 1: validate.sh runs all checks \u2014 PASS",
+      "Req 2: exit code 0 on success, 1 on failure \u2014 PASS",
+      "Req 3: state.json validated \u2014 PASS",
+      "Req 4: backlog.json validated \u2014 PASS",
+      "Req 5: memory.json validated \u2014 PASS",
+      "Req 6: cycle logs validated \u2014 PASS",
+      "Req 7: cross-references checked \u2014 PASS",
+      "Req 8: summary output \u2014 PASS"
     ]
   },
-  "approach_deviations": "Also fixed 2 old cycle logs (002, 008) that used prd_filename instead of prd — schema drift discovered by the validation script itself.",
+  "approach_deviations": "Also fixed 2 old cycle logs (002, 008) that used prd_filename instead of prd \u2014 schema drift discovered by the validation script itself.",
   "lessons_learned": "Validation script immediately found real issues in old cycle logs. Validates the value of structural validation.",
   "files_changed": [
     "skills/decide/scripts/validate.sh",
@@ -32,7 +32,7 @@
     ".claude-operator/logs/cycle-008.json"
   ],
   "tests_added": 0,
-  "commit": "pending",
+  "commit": "c7fa814",
   "validation_notes": "bash -n passed. validate.sh run: 12 checks OK, exit 0.",
   "memory_updates": [
     "Added 'Operator validation script' to features and feature_history",
@@ -41,6 +41,6 @@
   ],
   "satisfaction": {
     "rating": null,
-    "comment": "force mode — skipped"
+    "comment": "force mode \u2014 skipped"
   }
 }

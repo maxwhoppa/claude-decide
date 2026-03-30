@@ -69,8 +69,8 @@
       "source": "research-product-gap",
       "cycle_added": 1,
       "priority_score": 0.65,
-      "status": "queued",
-      "notes": "Convergence: product gap + customer value. Key for trust and retention."
+      "status": "completed",
+      "notes": "Completed in cycle 15 with PRD-015. /decide status and /decide backlog commands added."
     },
     {
       "id": "BL-009",
