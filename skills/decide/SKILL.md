@@ -115,12 +115,12 @@ Read `state.json` — phase must be "research".
 
 ### Step 0: Check for Fast-Track
 
-Read `.claude-operator/backlog.json`. If any queued item has `priority_score >= 0.85`, skip the full research phase:
-- Output: "Fast-tracking — backlog has high-priority items (score >= 0.85). Skipping research."
+Read `.claude-operator/backlog.json`. If there are ANY items with `status: "queued"`, skip the full research phase:
+- Output: "Fast-tracking — backlog has [N] queued items. Skipping research."
 - Pick the highest-priority queued item as this cycle's candidate.
 - Jump directly to **Step 5: Transition** (set phase to "propose").
 
-This avoids burning 7+ research agent dispatches when there is already a clear next action.
+Research only runs when the backlog is empty (all items completed, rejected, or no items at all). This avoids burning 7+ research agent dispatches when there is already work to do.
 
 ### Step 1: Load Context
 
