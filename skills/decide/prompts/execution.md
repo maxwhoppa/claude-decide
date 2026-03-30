@@ -65,11 +65,21 @@ If ANY requirement fails, fix it and re-verify ALL requirements.
 - Run any new tests you added
 - If the project has a dev server, start it and verify the feature works
 
+**Existing test suite (MANDATORY):**
+Before committing, you MUST discover and run any existing tests in the project:
+1. Look for test infrastructure: `package.json` scripts (test, jest, vitest, mocha), `pytest.ini`, `Makefile` test targets, `*.test.*` or `*_test.*` files, `tests/` or `__tests__/` directories
+2. If tests exist, run them ALL. Not just the ones related to your changes — the ENTIRE suite.
+3. If any test fails, fix it. Either your code broke it (fix your code) or the test needs updating to match the new behavior (update the test). Do NOT skip or ignore failing tests.
+4. Re-run the full suite after fixes to confirm everything passes.
+5. Record the test command and output in your validation notes.
+
+If the project has no tests, note "No existing test suite found" in validation notes.
+
 **Regression check:**
 - Read the files you modified and verify you didn't break existing functionality
-- If the project has tests, they must all pass — not just the new ones
+- ALL existing tests must pass — not just new ones
 
-Fix anything broken and re-test. Do not commit until ALL requirements pass.
+Fix anything broken and re-test. Do not commit until ALL requirements pass and ALL tests pass.
 
 ### 5. Commit
 
