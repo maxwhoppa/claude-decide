@@ -23,7 +23,8 @@
     "/decide slash command for invoking operator from Claude Code",
     "Secure force mode launcher with shell injection fix, temp file prompt construction, paused state handling, and max-cycles safety limit",
     "Quick onboarding mode — repo analysis pre-fills all 11 fields with confidence scores, user confirms via summary table instead of 11 sequential questions",
-    "Progress indicators — phase banners, agent dispatch status, synthesis summaries, and transition markers during all phases"
+    "Progress indicators — phase banners, agent dispatch status, synthesis summaries, and transition markers during all phases",
+    "README.md with installation guide, quick start, invocation modes, cycle phases, and project structure"
   ],
   "feature_history": [
     { "feature": "Onboarding with automated repo analysis and user interview", "source": "onboarding", "cycle": 0 },
@@ -41,7 +42,8 @@
     { "feature": "/decide slash command for invoking operator from Claude Code", "source": "operator-built", "cycle": 1 },
     { "feature": "Secure force mode launcher with shell injection fix, paused state handling, and max-cycles limit", "source": "operator-built", "cycle": 2 },
     { "feature": "Quick onboarding mode with confidence-based summary and fallback", "source": "operator-built", "cycle": 3 },
-    { "feature": "Progress indicators for all phases", "source": "operator-built", "cycle": 4 }
+    { "feature": "Progress indicators for all phases", "source": "operator-built", "cycle": 4 },
+    { "feature": "README.md with installation and usage guide", "source": "operator-built", "cycle": 5 }
   ],
   "constraints": [],
   "assumptions": [
@@ -49,8 +51,7 @@
     "Target projects have a git repository initialized"
   ],
   "known_gaps": [
-    "No README.md",
-    "No tests",
+        "No tests",
     "No CI/CD",
     "No .gitignore",
     "No cost awareness for subagent dispatches",
@@ -62,7 +63,8 @@
     { "cycle": 1, "decision": "Renamed skill to 'decide' for /decide slash command. Skill now invocable natively in Claude Code.", "prd": "001-slash-command-skill.md" },
     { "cycle": 2, "decision": "Rewrote force mode launcher to fix critical shell injection and ensure full SKILL.md instruction loading. Added paused state handling and max-cycles safety limit.", "prd": "002-fix-force-mode-launcher.md" },
     { "cycle": 3, "decision": "Replaced 11-question sequential onboarding with confidence-scored summary table. Users confirm/correct in 2-3 exchanges. Fallback to full interview for empty repos.", "prd": "003-quick-onboarding.md", "lessons": "Repo analysis output maps cleanly to all onboarding fields but revenue model and git tracking always need explicit asking." },
-    { "cycle": 4, "decision": "Added progress indicators to all phases — banners, dispatch status, synthesis summaries, transition markers.", "prd": "004-progress-indicators.md" }
+    { "cycle": 4, "decision": "Added progress indicators to all phases — banners, dispatch status, synthesis summaries, transition markers.", "prd": "004-progress-indicators.md" },
+    { "cycle": 5, "decision": "Added README.md with installation, quick start, invocation modes, cycle phases, and project structure.", "prd": "005-readme.md" }
   ],
   "experiments": []
 }

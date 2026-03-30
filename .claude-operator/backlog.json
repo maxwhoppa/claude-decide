@@ -15,8 +15,8 @@
       "source": "onboarding-detected",
       "cycle_added": 0,
       "priority_score": 0.75,
-      "status": "queued",
-      "notes": "Needed for launch — users need to know how to install and use it"
+      "status": "completed",
+      "notes": "Completed in cycle 5 with PRD-005. 132-line README with install, quick start, modes, phases, and structure."
     },
     {
       "id": "BL-003",
@@ -222,8 +222,8 @@
       "source": "research-customer-value",
       "cycle_added": 2,
       "priority_score": 0.75,
-      "status": "queued",
-      "notes": "Convergence: customer value + product gap. Currently requires manual symlink/copy. No documented install path. Distinct from BL-002 (README) — this is the actual mechanism."
+      "status": "completed",
+      "notes": "Completed outside operator cycle. install.sh created manually, copies skills from repo to ~/.claude/skills/. Documented in README (PRD-005)."
     },
     {
       "id": "BL-026",
