@@ -47,26 +47,31 @@ Dispatch a subagent using the Agent tool:
 - Dispatch as a `general-purpose` subagent
 - Collect the JSON output (product hypothesis)
 
-### Step 2: Present Hypothesis
+### Step 2: Map Analysis to Onboarding Fields
 
-Show the user what you found:
+Take the repo analysis JSON output and map it to each of the 11 onboarding fields. For each field, assign a confidence level:
 
-```
-I've analyzed this codebase. Here's what I think this project is:
+| Onboarding Field | Mapped From (repo analysis) | Confidence Rules |
+|---|---|---|
+| Product name | `product_hypothesis` (extract name) | **High** if package.json/README has a clear name; **Low** if inferred from directory name only |
+| Target customer | `product_hypothesis` + README audience language | **High** if README explicitly states audience; **Medium** if inferred from product type; **Low** if no signal |
+| Core problem | `product_hypothesis` + `detected_features` | **High** if README describes the problem; **Medium** if inferred from features; **Low** if no signal |
+| Revenue model | README, detected pricing pages/config | **High** if pricing page or stripe/payment deps found; **Medium** if README mentions model; **Low** if no signal |
+| Product stage | `maturity` + git history + `detected_gaps` | **High** if CI/CD and tests exist (live/scaling); **Medium** if partial signals; **Low** if ambiguous |
+| Top priorities | `detected_gaps` + `todos_found` | **Medium** if clear gaps/TODOs; **Low** if no signal |
+| Technical constraints | `tech_stack` + `architecture` | **Medium** if strong architectural patterns detected; **Low** if generic stack |
+| Areas of concern | `detected_gaps` + `maturity` | **Medium** if gaps are concentrated in specific areas; **Low** if no clear signal |
+| No-touch areas | Lock files, generated code, vendor dirs | **High** if clear generated/vendor dirs found; **Low** if no signal |
+| Wishlist | `detected_gaps` + `todos_found` | **Medium** if TODOs/gaps found; **Low** if none |
+| Git tracking | Presence of existing `.gitignore` patterns | **Low** always (this is a preference question) |
 
-**[product_hypothesis]**
+If the repo analysis returned no usable signal (e.g., empty repo — no `product_hypothesis`, empty `detected_features`, empty `tech_stack`), skip to **Step 2b: Fallback Interview** instead.
 
-Detected features: [list]
-Tech stack: [list]
-Gaps I noticed: [list]
-```
+### Step 2b: Fallback Interview (only if repo analysis returned no signal)
 
-### Step 3: User Interview
+If the repo is empty or analysis produced no usable output, fall back to the original sequential interview. Ask these questions ONE AT A TIME. Wait for an answer before asking the next.
 
-Ask these questions ONE AT A TIME. Wait for an answer before asking the next.
-
-Core questions (always ask all):
-1. "Is my analysis correct? What did I get wrong?"
+1. "What is this product called?"
 2. "Who is your target customer?"
 3. "What core problem does this solve for them?"
 4. "How do you (or will you) make money?"
@@ -78,11 +83,51 @@ Core questions (always ask all):
 10. "What features or improvements are on your wishlist that haven't been built yet?"
 11. "Should `.claude-operator/` be tracked in git?"
 
-Adaptive follow-ups (ask based on answers):
-- If stage is "live with users": "What's your most common user complaint?"
-- If stage is "pre-launch": "What's blocking launch?"
-- If revenue exists: "What's your highest-value feature?"
-- If constraints mentioned: probe deeper on each constraint
+After collecting all answers, proceed to **Step 4: Initialize State**.
+
+### Step 3: Present Summary and Collect Corrections
+
+Present the pre-filled summary to the user in a single structured block. Mark each field with a confidence indicator so low-confidence items stand out:
+
+```
+I've analyzed this codebase and pre-filled your project profile. Please review — correct anything that's wrong, and I'll ask a few follow-ups for the items I'm less sure about.
+
+| Field | Inferred Value | Confidence |
+|---|---|---|
+| Product name | [value] | [HIGH/MEDIUM/LOW] |
+| Target customer | [value] | [HIGH/MEDIUM/LOW] |
+| Core problem | [value] | [HIGH/MEDIUM/LOW] |
+| Revenue model | [value] | [HIGH/MEDIUM/LOW] |
+| Product stage | [value] | [HIGH/MEDIUM/LOW] |
+| Top priorities | [value] | [HIGH/MEDIUM/LOW] |
+| Technical constraints | [value] | [HIGH/MEDIUM/LOW] |
+| Areas of concern | [value] | [HIGH/MEDIUM/LOW] |
+| No-touch areas | [value] | [HIGH/MEDIUM/LOW] |
+| Wishlist | [value] | [HIGH/MEDIUM/LOW] |
+| Git tracking (.claude-operator/) | [value] | [LOW] |
+
+Does this look right? Correct anything that's off — for example: "customer is actually X, not Y" or "we're live with users, not pre-launch".
+```
+
+After the user responds with corrections (or confirms), apply their corrections to the field values.
+
+Then, for any fields still marked **LOW** confidence that the user did NOT explicitly correct or confirm, ask targeted follow-up questions. Ask at most 4 follow-up questions, bundled together in a single message (not one at a time). Prioritize the most important low-confidence fields:
+
+1. Revenue model (if LOW)
+2. Target customer (if LOW)
+3. Top priorities (if LOW)
+4. Git tracking preference (always LOW — always ask)
+
+Example follow-up message:
+```
+A few things I couldn't confidently infer — quick answers for these:
+
+1. How do you (or will you) make money? (I didn't find pricing or payment integrations)
+2. What are your top 1-3 priorities right now?
+3. Should `.claude-operator/` be tracked in git? (I'll add it to .gitignore if not)
+```
+
+After the user answers the follow-ups, all fields should be populated. Proceed to Step 4.
 
 ### Step 4: Initialize State
 
