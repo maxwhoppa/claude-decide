@@ -1,51 +1,22 @@
-# Execution Subagent
+# Execution Constraints
 
-You are implementing a PRD for Claude Operator. You have full autonomy to build, test, and commit.
+These constraints apply during the Execute Phase, on top of the superpowers executing-plans skill.
 
-## PRD to Implement
+## Commit Format
 
-{{prd_contents}}
+```
+Cycle {{cycle}} -- [short description] (PRD-{{prd_number}})
+```
 
-## Product Context
+Example: `Cycle 3 -- add progress indicators (PRD-003)`
 
-{{memory_json}}
-
-## Constraints (DO NOT VIOLATE)
-
-{{constraints}}
-
-## Process
-
-Follow this exact process. You MUST use the superpowers skills — invoke them via the Skill tool.
-
-### 1. Brainstorm
-
-Invoke the `/superpowers:brainstorming` skill (via the Skill tool) to explore the design space before writing any code. Feed it the PRD contents as context. This ensures you consider alternatives and edge cases before committing to an approach.
-
-### 2. Plan
-
-Invoke the `/superpowers:writing-plans` skill (via the Skill tool) to produce a structured implementation plan. Feed it the PRD and the brainstorming output. The skill will guide you through writing a step-by-step plan with files to change, verification steps, and dependencies.
-
-### 3. Execute
-
-Invoke the `/superpowers:executing-plans` skill (via the Skill tool) to implement the plan. This skill handles incremental execution with review checkpoints. Follow its process exactly:
-- Make changes incrementally — one logical unit at a time
-- After each change, verify it doesn't break existing functionality
-- Follow existing code patterns and conventions in the codebase
-- Keep changes minimal and focused on the PRD scope
-- Do NOT add features, refactoring, or improvements beyond what the PRD specifies
-
-### 4. Validate
-
-You MUST validate every change before committing. This is not optional.
+## Validation (after implementation, before committing)
 
 **Requirement-by-requirement verification:**
 Go through EACH numbered requirement in the PRD's "Requirements" section. For every requirement:
 1. Describe how you will verify it
 2. Actually run the verification (execute a command, read the output, check the behavior)
 3. Record PASS or FAIL with evidence (command output, file contents, etc.)
-
-Track these results — you will include them in your final output.
 
 If ANY requirement fails, fix it and re-verify ALL requirements.
 
@@ -55,77 +26,37 @@ If ANY requirement fails, fix it and re-verify ALL requirements.
 - Python: `python -m pytest`, `python -m py_compile <file>`
 - Any language: run the project's existing test suite
 - Run any new tests you added
-- If the project has a dev server, start it and verify the feature works
 
 **Existing test suite (MANDATORY):**
-Before committing, you MUST discover and run any existing tests in the project:
-1. Look for test infrastructure: `package.json` scripts (test, jest, vitest, mocha), `pytest.ini`, `Makefile` test targets, `*.test.*` or `*_test.*` files, `tests/` or `__tests__/` directories
-2. If tests exist, run them ALL. Not just the ones related to your changes — the ENTIRE suite.
-3. If any test fails, fix it. Either your code broke it (fix your code) or the test needs updating to match the new behavior (update the test). Do NOT skip or ignore failing tests.
+1. Discover test infrastructure: `package.json` scripts, `pytest.ini`, `Makefile` test targets, `*.test.*` files, `tests/` directories
+2. If tests exist, run them ALL — not just the ones related to your changes.
+3. If any test fails, fix it. Do NOT skip or ignore failing tests.
 4. Re-run the full suite after fixes to confirm everything passes.
-5. Record the test command and output in your validation notes.
 
 If the project has no tests, note "No existing test suite found" in validation notes.
 
-**Regression check:**
-- Read the files you modified and verify you didn't break existing functionality
-- ALL existing tests must pass — not just new ones
-
 Fix anything broken and re-test. Do not commit until ALL requirements pass and ALL tests pass.
 
-### 5. Commit
+## Stuck Report
 
-When everything works, stage ALL changes including `.claude-operator/` state files and commit with this exact format:
+If you cannot resolve an issue after 10 attempts, write `.claude-operator/stuck.json`:
 
-```
-Cycle {{cycle}} -- [short description] (PRD-{{prd_number}})
-```
-
-Example: `Cycle 3 -- add progress indicators (PRD-003)`
-
-## Validation Rules
-
-- You MUST actually test the code by running it, not just reason about whether it works
-- If a test fails, fix it and re-test. Repeat until it passes.
-- If you cannot resolve an issue after 10 attempts, stop and write a stuck report:
-
-Write the following to `.claude-operator/stuck.json`:
 ```json
 {
   "cycle": {{cycle}},
   "prd": "{{prd_filename}}",
-  "attempts": <number of attempts>,
+  "attempts": 10,
   "last_error": "<the error message>",
-  "what_was_tried": ["attempt 1 description", "attempt 2 description", "..."],
-  "files_changed_so_far": ["file1.ts", "file2.ts"],
-  "committed": <true if you committed partial work, false otherwise>
+  "what_was_tried": ["attempt 1 description", "..."],
+  "files_changed_so_far": ["file1.ts", "..."],
+  "committed": false
 }
 ```
 
-Then exit. Do NOT continue trying.
+Then stop. Do NOT continue trying.
 
-## When Done
+## Scope
 
-Output a JSON result:
-
-```json
-{
-  "status": "success",
-  "requirements_verification": [
-    {"requirement": 1, "status": "pass", "evidence": "brief description of how verified"},
-    {"requirement": 2, "status": "pass", "evidence": "brief description of how verified"}
-  ],
-  "approach_deviations": ["Changed X because Y — include any deviation from the PRD's Technical Approach"],
-  "files_changed": ["path/to/file1", "path/to/file2"],
-  "tests_added": "<number>",
-  "tests_passing": true,
-  "commit": "<commit hash>",
-  "lessons_learned": ["Anything surprising about the codebase, patterns that differ from assumptions, or gotchas for future PRDs"],
-  "validation_notes": "Description of how you validated the implementation"
-}
-```
-
-Notes on the enriched fields:
-- `requirements_verification`: one entry per numbered requirement in the PRD. If a requirement was descoped, use `"status": "descoped"` and explain why in `evidence`.
-- `approach_deviations`: empty array `[]` if the Technical Approach was followed exactly. Otherwise list each meaningful deviation.
-- `lessons_learned`: empty array `[]` if nothing surprising. Otherwise capture insights that would help future PRD generation or execution.
+- Do NOT add features, refactoring, or improvements beyond what the PRD specifies
+- Keep changes minimal and focused on the PRD scope
+- Follow existing code patterns and conventions

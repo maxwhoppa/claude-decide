@@ -351,29 +351,32 @@ This is a CONVERSATION, not a yes/no gate. Stay in this phase until you get a cl
 
 Read `state.json` — phase must be "execute". Read `current_prd` to get the PRD filename.
 
-### Step 1: Dispatch Execution Subagent
-
 Output: "**Execute Phase** — implementing [PRD title]..."
 
-Read `${CLAUDE_SKILL_DIR}/prompts/execution.md` for the prompt template.
+### Step 1: Brainstorm
 
-Replace template variables:
-- `{{prd_contents}}` — full contents of the PRD file
-- `{{memory_json}}` — contents of memory.json
-- `{{constraints}}` — the constraints array from memory.json, formatted as a bulleted list
-- `{{cycle}}` — current cycle number from state.json
-- `{{prd_filename}}` — the PRD filename
+Invoke the `superpowers:brainstorming` skill (via the Skill tool). Feed it the PRD contents and product context from `memory.json` as the task description. This explores the design space, considers alternatives, and identifies edge cases before committing to an approach.
 
-Dispatch as a `general-purpose` subagent. This subagent will:
-- Run the superpowers brainstorm → plan → execute pipeline
-- Validate by actually testing the code
-- Commit when done
-- Write stuck.json if it can't resolve after 10 attempts
+### Step 2: Write Plan
 
-### Step 2: Process Result
+Invoke the `superpowers:writing-plans` skill (via the Skill tool). Feed it the PRD and the brainstorming output. This produces a structured implementation plan with files to change, verification steps, and dependencies.
 
-If the subagent returns a success result:
+### Step 3: Execute Plan
+
+Invoke the `superpowers:executing-plans` skill (via the Skill tool). This handles incremental execution with review checkpoints.
+
+Read `${CLAUDE_SKILL_DIR}/prompts/execution.md` for additional execution constraints — specifically the validation rules, commit format, and stuck report format. These constraints apply on top of the executing-plans skill:
+
+- **Commit format**: `Cycle {{cycle}} -- [short description] (PRD-{{prd_number}})`
+- **Stuck report**: If you cannot resolve an issue after 10 attempts, write `.claude-operator/stuck.json` (see execution.md for schema) and stop.
+- **Validation**: After implementation, go through EACH numbered requirement in the PRD and verify PASS/FAIL with evidence. Run any existing test suite. All tests must pass before committing.
+- **Scope**: Do NOT add features, refactoring, or improvements beyond what the PRD specifies.
+
+### Step 4: Process Result
+
+If execution succeeded (commit was made):
 - Output: "Transitioning to Update Memory Phase..."
+- Record the per-requirement verification results, approach deviations, and lessons learned for use in the Update Memory phase.
 - Proceed to Update Memory phase (same session)
 
 If `.claude-operator/stuck.json` was created:
