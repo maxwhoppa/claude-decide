@@ -209,7 +209,16 @@ Read `${CLAUDE_SKILL_DIR}/prompts/prd-critic.md` for instructions.
 
 Run the PRD through all 5 critique lenses. Modify the PRD file in place. Track changes.
 
-### Step 3: Transition
+### Step 3: Resolve Open Questions (Force Mode)
+
+If mode is "force", check the PRD's "Open Questions" section. If it contains any unresolved questions (anything other than "None" or empty):
+- Dispatch a subagent to resolve them: "You are resolving open questions for a PRD before execution. Read the codebase and product context to answer these questions. Here is the PRD: [prd_contents]. Here is the product context: [memory_json]. For each open question, provide a concrete answer or recommendation. Output as JSON: `{ "resolutions": [{ "question": "...", "answer": "...", "confidence": "high|medium|low" }] }`"
+- Update the PRD's Open Questions section in place: replace each question with its resolution.
+- If any resolution has `confidence: "low"`, add it to the Risks section instead and note the uncertainty.
+
+This ensures the execution subagent never receives a PRD with unresolved questions, even when collaboration is skipped.
+
+### Step 4: Transition
 
 If mode is "force":
 - Update `state.json`: set phase to "execute", set `current_prd` to the PRD filename.
@@ -312,21 +321,39 @@ If `.claude-operator/stuck.json` was created:
 
 ## Update Memory Phase
 
-### Step 1: Update memory.json
+### Step 1: Annotate the PRD with Outcome
+
+Read the execution subagent's result (specifically `requirements_verification`, `approach_deviations`, and `lessons_learned`). Append an `## Outcome` section to the PRD file:
+
+```markdown
+## Outcome (Cycle N)
+
+- **Status**: completed | partial | deviated
+- **Requirements**: N of M passed
+  - [For any descoped/failed requirements: "Req N: descoped/failed — reason"]
+- **Approach deviations**: [from approach_deviations, or "None"]
+- **Lessons learned**: [from lessons_learned, or "None"]
+```
+
+Use `completed` if all requirements passed. Use `partial` if any were descoped. Use `deviated` if the technical approach changed significantly.
+
+This turns PRDs from planning-only documents into full lifecycle records.
+
+### Step 2: Update memory.json
 
 Based on the execution result:
 - Add the new feature to `features` array
 - Add to `feature_history` with source and cycle
 - Remove relevant items from `known_gaps`
-- Add to `past_decisions`
+- Add to `past_decisions` — include a `lessons` field if `lessons_learned` was non-empty
 - Update any experiments
 
-### Step 2: Update backlog.json
+### Step 3: Update backlog.json
 
 - Mark the completed item as "completed"
 - If the execution surfaced new concerns, add them as new backlog items
 
-### Step 3: Write Cycle Log
+### Step 4: Write Cycle Log
 
 Write a summary to `.claude-operator/logs/cycle-NNN.json` with:
 - cycle number, timestamp
@@ -334,13 +361,13 @@ Write a summary to `.claude-operator/logs/cycle-NNN.json` with:
 - proposed idea
 - user feedback (from collaborate phase)
 - PRD filename
-- execution result
+- execution result (include `requirements_verification`, `approach_deviations`, and `lessons_learned` from the subagent output)
 - files changed, tests added
 - commit hash
 - validation notes
 - memory updates made
 
-### Step 4: Commit All Changes
+### Step 5: Commit All Changes
 
 Stage ALL changes — both code changes from execution AND `.claude-operator/` state files (memory, backlog, logs, PRDs). Commit with this exact format:
 
@@ -352,7 +379,7 @@ Where N is the cycle number. Example: `Cycle 3 -- add progress indicators (PRD-0
 
 If the execution subagent already committed code changes, amend that commit to also include `.claude-operator/` and use the correct message format. Every cycle MUST produce exactly one commit with this format.
 
-### Step 5: Reset and Exit
+### Step 6: Reset and Exit
 
 Update `state.json`:
 - Increment `cycle`

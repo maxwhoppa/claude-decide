@@ -55,6 +55,8 @@ Go through EACH numbered requirement in the PRD's "Requirements" section. For ev
 2. Actually run the verification (execute a command, read the output, check the behavior)
 3. Record PASS or FAIL with evidence (command output, file contents, etc.)
 
+Track these results — you will include them in your final output.
+
 If ANY requirement fails, fix it and re-verify ALL requirements.
 
 **Mechanical checks (run all that apply):**
@@ -119,10 +121,21 @@ Output a JSON result:
 ```json
 {
   "status": "success",
+  "requirements_verification": [
+    {"requirement": 1, "status": "pass", "evidence": "brief description of how verified"},
+    {"requirement": 2, "status": "pass", "evidence": "brief description of how verified"}
+  ],
+  "approach_deviations": ["Changed X because Y — include any deviation from the PRD's Technical Approach"],
   "files_changed": ["path/to/file1", "path/to/file2"],
-  "tests_added": <number>,
+  "tests_added": "<number>",
   "tests_passing": true,
   "commit": "<commit hash>",
+  "lessons_learned": ["Anything surprising about the codebase, patterns that differ from assumptions, or gotchas for future PRDs"],
   "validation_notes": "Description of how you validated the implementation"
 }
 ```
+
+Notes on the enriched fields:
+- `requirements_verification`: one entry per numbered requirement in the PRD. If a requirement was descoped, use `"status": "descoped"` and explain why in `evidence`.
+- `approach_deviations`: empty array `[]` if the Technical Approach was followed exactly. Otherwise list each meaningful deviation.
+- `lessons_learned`: empty array `[]` if nothing surprising. Otherwise capture insights that would help future PRD generation or execution.

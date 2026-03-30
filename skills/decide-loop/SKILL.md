@@ -1,0 +1,70 @@
+---
+name: decide-loop
+description: Continuously run the decide operator in force mode, auto-restarting after each cycle. Use when the user wants to run /decide in a loop without manual re-invocation.
+---
+
+# Decide Loop
+
+Runs the Claude Operator (`/decide force`) in a continuous loop within a single Claude Code session. After each cycle completes, it automatically starts the next one.
+
+## Usage
+
+```
+/decide-loop              # run until stopped (default max: 50 cycles)
+/decide-loop 10           # run 10 cycles then stop
+```
+
+## How It Works
+
+This skill wraps the `/decide` skill's phase router. Instead of exiting after each phase and waiting for re-invocation, it loops: execute phase → update state → check stop conditions → execute next phase.
+
+## Execution
+
+### Step 1: Parse Args
+
+Read the args. If a number is provided, use it as `max_cycles`. Otherwise default to 50.
+
+### Step 2: Load the Decide Skill
+
+Read the full decide skill from `/Users/maxwellnewman/.claude/skills/decide/SKILL.md`. This is your playbook — all phase logic, guardrails, and constraints apply exactly as documented there.
+
+### Step 3: Initialize
+
+If `.claude-operator/` does not exist, run the **Onboarding Phase** from the decide skill (including the user interview — this is the one interactive part). Set mode to "force" during initialization.
+
+If `.claude-operator/state.json` exists, set its `mode` to "force".
+
+Set a cycle counter to 0.
+
+Output:
+```
+Starting decide loop (force mode, max cycles: [N]).
+Touch .claude-operator/stop to halt after the current cycle.
+```
+
+### Step 4: Loop
+
+Repeat the following until a stop condition is met:
+
+1. **Check stop conditions** (in order):
+   - If cycle counter >= max_cycles → output "Max cycles ([N]) reached. Loop stopped." and exit.
+   - If `.claude-operator/stop` exists → remove the file, output "Stop signal detected. Loop stopped." and exit.
+   - If `.claude-operator/stuck.json` exists → enter **Stuck Recovery Phase** from the decide skill (present the stuck report to the user and handle their response). After resolution, continue the loop. If the user chooses "stop", exit the loop.
+   - If `state.json` status is "paused" → output "Operator is paused." and exit.
+
+2. **Execute one cycle:**
+   - Increment cycle counter.
+   - Output: `--- Cycle [N] of [max] ---`
+   - Read `state.json` to determine the current phase.
+   - Execute that phase using the exact logic from the decide skill's phase router, with one modification: **do not exit after phase transitions**. Instead of "Exit. The next cycle picks up execution," continue directly to the next phase in the same iteration.
+   - A full cycle is: research → propose → execute → update memory. Run all of these phases sequentially within a single loop iteration (don't stop between them).
+   - After the Update Memory phase completes (state is reset to "research" and cycle is incremented), that counts as one completed cycle.
+
+3. **Loop back to step 1.**
+
+### Important Differences from `/decide`
+
+- **No exit between phases**: The normal `/decide` skill exits after certain phase transitions and expects re-invocation. This loop runs all phases of a cycle sequentially without stopping.
+- **Force mode always**: PRDs are auto-approved, collaboration is skipped, open questions are resolved by subagent (per the decide skill's Step 3 in the Propose Phase).
+- **Stuck = interactive pause, not full stop**: When stuck, the loop pauses to let the user help debug (since they're in-session), then continues. Only an explicit "stop" from the user ends the loop.
+- **All other behavior is identical**: Guardrails, research agents, PRD generation, critic, execution, memory updates — all follow the decide skill exactly.
