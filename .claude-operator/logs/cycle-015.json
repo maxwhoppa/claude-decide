@@ -2,11 +2,11 @@
   "cycle": 15,
   "timestamp": "2026-03-30T01:35:00Z",
   "research_findings": {
-    "summary": "Fast-tracked — backlog had 20 queued items. Picked BL-008 (backlog inspection commands, priority 0.65).",
+    "summary": "Fast-tracked \u2014 backlog had 20 queued items. Picked BL-008 (backlog inspection commands, priority 0.65).",
     "new_backlog_items": 0
   },
   "proposed_idea": "BL-008: Add backlog inspection, status, and history commands",
-  "user_feedback": "N/A — force mode, auto-approved",
+  "user_feedback": "N/A \u2014 force mode, auto-approved",
   "prd": "015-backlog-inspection.md",
   "execution_result": "success",
   "requirements_verification": {
@@ -14,11 +14,11 @@
     "passed": 5,
     "failed": 0,
     "details": [
-      "Req 1: /decide status outputs cycle, phase, mode, timestamp, PRD, backlog counts — PASS",
-      "Req 2: /decide backlog outputs priority-sorted table — PASS",
-      "Req 3: both are read-only — PASS",
-      "Req 4: not-initialized guard — PASS",
-      "Req 5: documented in Phase Router Step 0 — PASS"
+      "Req 1: /decide status outputs cycle, phase, mode, timestamp, PRD, backlog counts \u2014 PASS",
+      "Req 2: /decide backlog outputs priority-sorted table \u2014 PASS",
+      "Req 3: both are read-only \u2014 PASS",
+      "Req 4: not-initialized guard \u2014 PASS",
+      "Req 5: documented in Phase Router Step 0 \u2014 PASS"
     ]
   },
   "approach_deviations": "None",
@@ -27,7 +27,7 @@
     "skills/decide/SKILL.md"
   ],
   "tests_added": 0,
-  "commit": "pending",
+  "commit": "7ebdace",
   "validation_notes": "Verified by reading SKILL.md Status Phase and Backlog Phase sections.",
   "memory_updates": [
     "Added '/decide status and /decide backlog commands' to features and feature_history",
@@ -36,6 +36,6 @@
   ],
   "satisfaction": {
     "rating": null,
-    "comment": "force mode — skipped"
+    "comment": "force mode \u2014 skipped"
   }
 }
