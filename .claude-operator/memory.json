@@ -35,7 +35,8 @@
     "/decide rollback command \u2014 reverts most recent cycle commit with confirmation and backlog rejection",
     "Operator validation script (validate.sh) \u2014 checks state.json, backlog.json, memory.json, cycle logs, and cross-references",
     "/decide status and /decide backlog commands \u2014 read-only inspection of operator state and queued work",
-    "PRD filename sanitization in Propose Phase -- prevents path traversal via unsanitized feature names"
+    "PRD filename sanitization in Propose Phase -- prevents path traversal via unsanitized feature names",
+    "Research Phase context sanitization -- sanitizes backlog and memory content in-memory before injecting into research agent prompts to prevent circular prompt injection amplification"
   ],
   "feature_history": [
     {
@@ -177,6 +178,11 @@
       "feature": "PRD filename sanitization",
       "source": "operator-built",
       "cycle": 16
+    },
+    {
+      "feature": "Research Phase context sanitization",
+      "source": "operator-built",
+      "cycle": 17
     }
   ],
   "constraints": [],
@@ -275,6 +281,12 @@
       "cycle": 16,
       "decision": "Added explicit filename sanitization rules to Propose Phase Step 1. Feature names are lowercased, stripped of special chars, and truncated to 50 chars before use as PRD filenames.",
       "prd": "016-sanitize-prd-filenames.md"
+    },
+    {
+      "cycle": 17,
+      "decision": "Added Step 1b: Sanitize Context to Research Phase. Backlog and memory content is sanitized in-memory (truncation, injection pattern stripping, template escaping, system tag removal) before injection into research agent prompts.",
+      "prd": "017-sanitize-backlog-content.md",
+      "lessons": "Sub-step numbering (1b) avoids renumbering. Installed skill copy must be synced manually."
     }
   ],
   "experiments": [],
@@ -283,6 +295,11 @@
       "cycle": 16,
       "rating": null,
       "prd": "016-sanitize-prd-filenames.md"
+    },
+    {
+      "cycle": 17,
+      "rating": null,
+      "prd": "017-sanitize-backlog-content.md"
     }
   ]
 }

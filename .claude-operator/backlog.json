@@ -312,8 +312,8 @@
       "source": "research-security",
       "cycle_added": 2,
       "priority_score": 0.65,
-      "status": "queued",
-      "notes": "Security high severity. Distinct from BL-016 (XML tag wrapping) \u2014 this is about the circular re-injection amplification pattern across cycles."
+      "status": "completed",
+      "notes": "Completed in cycle 17 with PRD-017. Step 1b: Sanitize Context added to Research Phase with 4 sanitization rules (truncation, injection pattern stripping, template escaping, system tag removal)."
     },
     {
       "id": "BL-036",
