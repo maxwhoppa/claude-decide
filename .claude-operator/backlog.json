@@ -231,8 +231,8 @@
       "source": "research-code-auditor",
       "cycle_added": 2,
       "priority_score": 0.75,
-      "status": "queued",
-      "notes": "Code auditor: execution phase depends on superpowers skills that may not be installed. Silent failure if missing."
+      "status": "completed",
+      "notes": "Completed in cycle 6 with PRD-006. Checks available skills list in system context, warns if missing, does not block."
     },
     {
       "id": "BL-027",

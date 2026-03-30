@@ -47,6 +47,24 @@ Dispatch a subagent using the Agent tool:
 - Dispatch as a `general-purpose` subagent
 - Collect the JSON output (product hypothesis)
 
+### Step 1b: Pre-flight Check
+
+Check if the following skills are available in your current session (they appear in the system reminders listing available skills):
+- `superpowers:brainstorming`
+- `superpowers:writing-plans`
+- `superpowers:executing-plans`
+
+If any are missing, output a warning:
+```
+Warning: Required superpowers skills not detected. The Execute Phase needs
+brainstorming, writing-plans, and executing-plans. Install the superpowers
+plugin before running your first cycle.
+```
+
+If all three are present, continue silently.
+
+This check does NOT block onboarding — it warns and continues.
+
 ### Step 2: Map Analysis to Onboarding Fields
 
 Take the repo analysis JSON output and map it to each of the 11 onboarding fields. For each field, assign a confidence level:
