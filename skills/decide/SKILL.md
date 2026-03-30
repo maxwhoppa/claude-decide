@@ -30,8 +30,9 @@ On every invocation:
 
 0. Check if args contain "force" → if `.claude-operator/state.json` exists, set its `mode` to "force" for this cycle. If state doesn't exist yet, remember to set mode to "force" during onboarding initialization.
 1. Check if `.claude-operator/` exists. If not → **Onboarding Phase**.
-2. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
-3. Read `.claude-operator/state.json`. Execute the phase specified in `state.json.phase`.
+2. Ensure all expected subdirectories exist: `mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs .claude-operator/inputs .claude-operator/agents` — this self-heals if directories were added in a newer version of the skill.
+3. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
+4. Read `.claude-operator/state.json`. Execute the phase specified in `state.json.phase`.
 
 ---
 
