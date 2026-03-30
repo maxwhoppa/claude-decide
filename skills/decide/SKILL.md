@@ -18,6 +18,14 @@ You'll interact during onboarding and PRD approval. Re-invoke between cycles.
 bash skills/decide/scripts/launcher.sh --force
 ```
 
+**Auto mode (confidence-gated):** Run `/decide auto` or `/decide auto 0.8` in Claude Code, or from terminal:
+```bash
+bash skills/decide/scripts/launcher.sh --auto          # threshold 0.75 (default)
+bash skills/decide/scripts/launcher.sh --auto=0.8      # threshold 0.80
+```
+
+Auto mode auto-approves PRDs whose backlog priority score meets the threshold, and routes lower-scored PRDs to the interactive collaborate phase.
+
 ## Quick Reference
 
 ```
@@ -29,6 +37,7 @@ ONBOARDING (first run) → RESEARCH → PROPOSE → COLLABORATE → EXECUTE → 
 On every invocation:
 
 0. Check if args contain "force" → if `.claude-operator/state.json` exists, set its `mode` to "force" for this cycle. If state doesn't exist yet, remember to set mode to "force" during onboarding initialization.
+   Check if args contain "auto" → set `mode` to "auto" in `state.json`. If the next argument is a number between 0.0 and 1.0, set `auto_threshold` to that value. Otherwise set `auto_threshold` to 0.75. If state doesn't exist yet, remember to set mode to "auto" during onboarding initialization.
 1. Check if `.claude-operator/` exists. If not → **Onboarding Phase**.
 2. Ensure all expected subdirectories exist: `mkdir -p .claude-operator/prds .claude-operator/experiments .claude-operator/logs .claude-operator/inputs .claude-operator/agents` — this self-heals if directories were added in a newer version of the skill.
 3. Check if `.claude-operator/stuck.json` exists. If so → **Stuck Recovery Phase**.
@@ -290,9 +299,9 @@ Read `${CLAUDE_SKILL_DIR}/prompts/prd-critic.md` for instructions.
 
 Run the PRD through all 5 critique lenses. Modify the PRD file in place. Track changes.
 
-### Step 3: Resolve Open Questions (Force Mode)
+### Step 3: Resolve Open Questions (Force/Auto Mode)
 
-If mode is "force", check the PRD's "Open Questions" section. If it contains any unresolved questions (anything other than "None" or empty):
+If mode is "force" or "auto", check the PRD's "Open Questions" section. If it contains any unresolved questions (anything other than "None" or empty):
 - Dispatch a subagent to resolve them: "You are resolving open questions for a PRD before execution. Read the codebase and product context to answer these questions. Here is the PRD: [prd_contents]. Here is the product context: [memory_json]. For each open question, provide a concrete answer or recommendation. Output as JSON: `{ "resolutions": [{ "question": "...", "answer": "...", "confidence": "high|medium|low" }] }`"
 - Update the PRD's Open Questions section in place: replace each question with its resolution.
 - If any resolution has `confidence: "low"`, add it to the Risks section instead and note the uncertainty.
@@ -305,6 +314,17 @@ If mode is "force":
 - Output: "Transitioning to Execute Phase..."
 - Update `state.json`: set phase to "execute", set `current_prd` to the PRD filename.
 - Exit. The next cycle will pick up execution.
+
+If mode is "auto":
+- Read the candidate backlog item's `priority_score` and `state.json`'s `auto_threshold` (default 0.75 if not set).
+- If `priority_score >= auto_threshold`:
+  - Output: "Auto-approved (priority [score] >= threshold [threshold]). Skipping collaboration."
+  - Update `state.json`: set phase to "execute", set `current_prd` to the PRD filename.
+  - Exit. The next cycle will pick up execution.
+- If `priority_score < auto_threshold`:
+  - Output: "Priority [score] < threshold [threshold]. Routing to collaboration."
+  - Update `state.json`: set phase to "collaborate".
+  - Continue to Collaborate Phase (same session).
 
 If mode is "default":
 - Output: "Transitioning to Collaborate Phase..."

@@ -21,7 +21,8 @@ Fields:
 - `status`: "running" | "paused"
 - `phase`: "onboarding" | "research" | "propose" | "collaborate" | "execute" | "validate" | "update_memory"
 - `cycle`: integer, increments after each complete cycle
-- `mode`: "default" | "force"
+- `mode`: "default" | "force" | "auto"
+- `auto_threshold`: float (0.0-1.0), default 0.75. Only used when mode is "auto". PRDs with backlog priority_score >= this value are auto-approved; below this value routes to collaboration.
 - `current_prd`: filename of the PRD being executed (e.g., "003-rate-limiting.md"), or null
 - `last_completed`: ISO timestamp of the last completed cycle
 

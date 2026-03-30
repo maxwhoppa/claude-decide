@@ -258,8 +258,8 @@
       "source": "research-experimentation",
       "cycle_added": 2,
       "priority_score": 0.72,
-      "status": "queued",
-      "notes": "Convergence: customer value + experimentation. Binary force/default loses users who want oversight but not on every cycle."
+      "status": "completed",
+      "notes": "Completed in cycle 9 with PRD-009. Auto mode added to SKILL.md, state-templates.md, and launcher.sh. Threshold defaults to 0.75."
     },
     {
       "id": "BL-030",

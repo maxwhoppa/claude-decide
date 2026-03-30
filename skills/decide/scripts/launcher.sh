@@ -11,12 +11,27 @@ set -euo pipefail
 
 # --- Argument Parsing ---
 FORCE_MODE=false
+AUTO_MODE=false
+AUTO_THRESHOLD="0.75"
 MAX_CYCLES=50
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --force)
       FORCE_MODE=true
+      shift
+      ;;
+    --auto)
+      AUTO_MODE=true
+      shift
+      ;;
+    --auto=*)
+      AUTO_MODE=true
+      AUTO_THRESHOLD="${1#--auto=}"
+      if ! [[ "$AUTO_THRESHOLD" =~ ^0(\.[0-9]+)?$|^1(\.0+)?$ ]]; then
+        echo "Error: --auto threshold must be a number between 0.0 and 1.0 (got: $AUTO_THRESHOLD)"
+        exit 1
+      fi
       shift
       ;;
     --max-cycles)
@@ -34,18 +49,21 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ "$FORCE_MODE" != "true" ]]; then
+if [[ "$FORCE_MODE" != "true" ]] && [[ "$AUTO_MODE" != "true" ]]; then
   echo "Claude Decide Launcher"
   echo ""
-  echo "This launcher is for --force mode (fully autonomous, no user interaction)."
+  echo "This launcher is for --force or --auto mode (no default/interactive mode)."
   echo ""
   echo "For default mode (interactive), run /decide in Claude Code."
   echo ""
   echo "Usage:"
   echo "  bash skills/decide/scripts/launcher.sh --force [--max-cycles N]"
+  echo "  bash skills/decide/scripts/launcher.sh --auto[=THRESHOLD] [--max-cycles N]"
   echo ""
   echo "Options:"
-  echo "  --force           Run in fully autonomous mode (required)"
+  echo "  --force           Run in fully autonomous mode"
+  echo "  --auto            Run in auto-approval mode (threshold 0.75)"
+  echo "  --auto=N          Run in auto-approval mode with custom threshold (0.0-1.0)"
   echo "  --max-cycles N    Maximum number of cycles to run (default: 50)"
   exit 0
 fi
@@ -63,24 +81,36 @@ trap cleanup EXIT
 trap "echo ''; echo 'Operator stopped.'; cleanup; exit 0" SIGINT SIGTERM
 
 # --- Write Prompt to Temp File (no shell expansion due to single-quoted delimiter) ---
-cat > "$PROMPT_FILE" <<'PROMPT_EOF'
-You are Claude Operator running in force mode (fully autonomous, no user interaction).
+if [[ "$AUTO_MODE" == "true" ]]; then
+  PROMPT_MODE="auto"
+  PROMPT_MODE_INSTRUCTION="Set mode to \"auto\" and auto_threshold to ${AUTO_THRESHOLD} in state.json for this cycle. PRDs with priority_score >= ${AUTO_THRESHOLD} are auto-approved; lower-scored PRDs route to collaboration (but since this is a non-interactive launcher, resolve collaboratively by auto-approving with a note)."
+else
+  PROMPT_MODE="force"
+  PROMPT_MODE_INSTRUCTION="Set mode to \"force\" in state.json for this cycle (auto-approve PRDs, skip user collaboration)."
+fi
+
+cat > "$PROMPT_FILE" <<PROMPT_EOF
+You are Claude Operator running in ${PROMPT_MODE} mode.
 
 Your instructions are in the file skills/decide/SKILL.md — read that file now for the full phase router, guardrails, and constraints.
 
 Your current state is in .claude-operator/state.json — read that file now.
 
 Execute the phase router exactly as documented in SKILL.md:
-1. Check if .claude-operator/ exists. If not, run the Onboarding Phase (set mode to "force" during initialization).
-2. Check if .claude-operator/stuck.json exists. If so, since this is force mode and there is no user to interact with, exit immediately so the launcher can handle it.
+1. Check if .claude-operator/ exists. If not, run the Onboarding Phase (set mode to "${PROMPT_MODE}" during initialization).
+2. Check if .claude-operator/stuck.json exists. If so, since this is a non-interactive launcher, exit immediately so the launcher can handle it.
 3. Read .claude-operator/state.json and execute the phase specified there.
-4. Set mode to "force" in state.json for this cycle (auto-approve PRDs, skip user collaboration).
+4. ${PROMPT_MODE_INSTRUCTION}
 5. When the phase is complete, update state.json and exit.
 
-IMPORTANT: Follow ALL guardrails from SKILL.md — no duplicates, no thrashing, no overbuilding, respect constraints, no mid-execution pivots. You have the same responsibilities as an interactive /decide force invocation.
+IMPORTANT: Follow ALL guardrails from SKILL.md — no duplicates, no thrashing, no overbuilding, respect constraints, no mid-execution pivots. You have the same responsibilities as an interactive /decide ${PROMPT_MODE} invocation.
 PROMPT_EOF
 
-echo "Claude Operator starting in FORCE mode (fully autonomous)..."
+if [[ "$AUTO_MODE" == "true" ]]; then
+  echo "Claude Operator starting in AUTO mode (threshold: ${AUTO_THRESHOLD})..."
+else
+  echo "Claude Operator starting in FORCE mode (fully autonomous)..."
+fi
 echo "Max cycles: ${MAX_CYCLES}"
 echo "Press Ctrl+C to stop immediately."
 echo "Run 'touch .claude-operator/stop' from another terminal to stop after the current cycle."
